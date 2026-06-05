@@ -173,6 +173,227 @@ const INITIAL_PRODUCTS = [
     },
     description: "The Lu Shyoung LS-16E-3 is a battery-powered sprayer that eliminates manual pumping fatigue. It runs on a rechargeable 12V battery, operating quietly with an auto-cut pressure switch. Features adjustable pressure dial and multi-hole nozzle attachments.",
     badge: "Eco Pick"
+  },
+  {
+    id: "prod-hdpe-agri-pipe",
+    name: "HDPE Agri Pipe",
+    category: "HDPE Pipes",
+    price: 118.00,
+    stock: 500,
+    image: "images/HDPE_Pipe.svg.avif",
+    specs: {
+      "Material": "PE100 high-density polyethylene",
+      "Diameter Range": "32-110 mm",
+      "Pressure Rating": "PN 6 to PN 12.5",
+      "Supply Form": "Coil or straight length",
+      "Application": "Irrigation and water transfer"
+    },
+    description: "Durable HDPE agricultural pipes designed for water supply, drip irrigation mains, borewell discharge, and farm distribution lines. UV-stabilized material and smooth inner walls help reduce friction loss and maintenance.",
+    badge: "Irrigation Grade"
+  },
+  {
+    id: "prod-mdpe-utility-pipe",
+    name: "MDPE Utility Pipe",
+    category: "MDPE Pipes",
+    price: 96.00,
+    stock: 420,
+    image: "images/MDPE_pipe.png",
+    specs: {
+      "Material": "Medium-density polyethylene",
+      "Diameter Range": "20-90 mm",
+      "Flexibility": "High bend tolerance",
+      "Jointing": "Compression or fusion fittings",
+      "Application": "Water and utility distribution"
+    },
+    description: "Flexible MDPE pipes for reliable underground and surface utility networks. The pipe body is easy to route around farm layouts and supports dependable flow for water distribution and service lines.",
+    badge: "Flexible Line"
+  },
+  {
+    id: "prod-electrofusion-coupler-kit",
+    name: "Coupler 63mm to 400mm",
+    category: "Electrofusion Fittings",
+    price: 850.00,
+    stock: 140,
+    image: "images/cupler.png",
+    specs: {
+      "Fitting Type": "Coupler",
+      "Size Range": "63-400 mm",
+      "Welding Type": "Electrofusion",
+      "Compatibility": "HDPE and MDPE pipe systems",
+      "Use Case": "Straight pipe jointing"
+    },
+    description: "Electrofusion couplers for joining HDPE and MDPE pipe runs with a permanent, leak-resistant welded connection. Available from 63mm to 400mm for irrigation mains and utility pipe networks.",
+    badge: "Leak Tight"
+  },
+  {
+    id: "prod-electrofusion-reducing-tee",
+    name: "Reducing Tee 63mm to 315mm",
+    category: "Electrofusion Fittings",
+    price: 1250.00,
+    stock: 85,
+    image: "images/ELECTROFUSION.png",
+    specs: {
+      "Fitting Type": "Reducing tee",
+      "Size Range": "63-315 mm",
+      "Reducing Sizes": "All reducing sizes",
+      "Welding Type": "Electrofusion",
+      "Application": "Branch line reduction"
+    },
+    description: "Electrofusion reducing tees for creating reduced branch connections from main HDPE or MDPE pipelines. Available in all reducing sizes from 63mm to 315mm for farm and utility distribution layouts.",
+    badge: "All Sizes"
+  },
+  {
+    id: "prod-electrofusion-equal-tee",
+    name: "Equal Tee 63mm to 315mm",
+    category: "Electrofusion Fittings",
+    price: 1180.00,
+    stock: 90,
+    image: "images/Equal tee.png",
+    specs: {
+      "Fitting Type": "Equal tee",
+      "Size Range": "63-315 mm",
+      "Branch Size": "Equal to main line",
+      "Welding Type": "Electrofusion",
+      "Application": "Three-way pipe branching"
+    },
+    description: "Equal tee electrofusion fittings for same-diameter branch connections in HDPE and MDPE pipe networks. Designed for secure three-way joints across irrigation, water supply, and utility systems.",
+    badge: "Branch Joint"
+  },
+  {
+    id: "prod-electrofusion-end-cap",
+    name: "End Cap 63mm to 315mm",
+    category: "Electrofusion Fittings",
+    price: 520.00,
+    stock: 130,
+    image: "images/End cap.png",
+    specs: {
+      "Fitting Type": "End cap",
+      "Size Range": "63-315 mm",
+      "Welding Type": "Electrofusion",
+      "Use Case": "Pipeline termination",
+      "Compatibility": "HDPE and MDPE pipes"
+    },
+    description: "Electrofusion end caps for sealing pipeline ends during installation, expansion, or maintenance. Built for dependable pressure-holding performance in HDPE and MDPE systems.",
+    badge: "Pipe Seal"
+  },
+  {
+    id: "prod-electrofusion-reducers",
+    name: "Reducers 63mm to 315mm",
+    category: "Electrofusion Fittings",
+    price: 780.00,
+    stock: 110,
+    image: "images/REDUCERS.png",
+    specs: {
+      "Fitting Type": "Reducer",
+      "Size Range": "63-315 mm",
+      "Purpose": "Diameter transition",
+      "Welding Type": "Electrofusion",
+      "Application": "Flow line size change"
+    },
+    description: "Electrofusion reducers for transitioning between pipe diameters without compromising joint quality. Suitable for irrigation distribution, pumping lines, and utility pipe networks.",
+    badge: "Size Change"
+  },
+  {
+    id: "prod-electrofusion-elbow-90",
+    name: "Elbow",
+    category: "Electrofusion Fittings",
+    price: 980.00,
+    stock: 95,
+    image: "images/ELBOW.png",
+    specs: {
+      "Fitting Type": "Elbow",
+      "Size Range": "All",
+      "Angle": "All",
+      "Welding Type": "Electrofusion",
+      "Application": "Right-angle pipe turns"
+    },
+    description: "90 degree electrofusion elbows for compact right-angle direction changes in HDPE and MDPE pipe layouts. Designed for strong welded turns in buried or surface installations.",
+    badge: "90 Degree"
+  },
+  // {
+  //   id: "prod-electrofusion-elbow-45",
+  //   name: "45 Degree Elbow 63mm to 200mm",
+  //   category: "Electrofusion Fittings",
+  //   price: 720.00,
+  //   stock: 100,
+  //   image: "images/elbow_45.svg",
+  //   specs: {
+  //     "Fitting Type": "45 degree elbow",
+  //     "Size Range": "63-200 mm",
+  //     "Angle": "45 degrees",
+  //     "Welding Type": "Electrofusion",
+  //     "Application": "Moderate pipe turns"
+  //   },
+  //   description: "45 degree electrofusion elbows for smoother pipe direction changes and reduced layout stress. Available from 63mm to 200mm for HDPE and MDPE systems.",
+  //   badge: "45 Degree"
+  // },
+  // {
+  //   id: "prod-electrofusion-elbow-225",
+  //   name: "22.5 Degree Elbow 63mm to 200mm",
+  //   category: "Electrofusion Fittings",
+  //   price: 690.00,
+  //   stock: 100,
+  //   image: "images/elbow_225.svg",
+  //   specs: {
+  //     "Fitting Type": "22.5 degree elbow",
+  //     "Size Range": "63-200 mm",
+  //     "Angle": "22.5 degrees",
+  //     "Welding Type": "Electrofusion",
+  //     "Application": "Fine alignment changes"
+  //   },
+  //   description: "22.5 degree electrofusion elbows for gentle alignment corrections in pipeline runs. Useful where the network needs a controlled bend without a sharp direction change.",
+  //   badge: "22.5 Degree"
+  // },
+  {
+    id: "prod-electrofusion-saddle",
+    name: "Saddle 63mm to 315mm",
+    category: "Electrofusion Fittings",
+    price: 940.00,
+    stock: 80,
+    image: "images/Saddle.png",
+    specs: {
+      "Fitting Type": "Saddle",
+      "Size Range": "63-315 mm",
+      "Welding Type": "Electrofusion",
+      "Use Case": "Branch outlet tapping",
+      "Compatibility": "HDPE and MDPE pipes"
+    },
+    description: "Electrofusion saddles for creating branch outlets on main pipe runs with a secure welded interface. Suitable for irrigation zones, service take-offs, and utility tapping points.",
+    badge: "Outlet Tap"
+  },
+  {
+    id: "prod-moulded-hdpe-fittings",
+    name: "Moulded HDPE Fittings",
+    category: "Moulded Fittings",
+    price: 420.00,
+    stock: 220,
+    image: "images/Moduled HDPE.png",
+    specs: {
+      "Fitting Types": "Elbow, tee, reducer, end cap",
+      "Material": "Injection moulded HDPE",
+      "Size Range": "32-160 mm",
+      "Pressure Rating": "PN 6 to PN 16",
+      "Application": "Branching and direction changes"
+    },
+    description: "Factory moulded HDPE fittings for clean pipe routing, branch connections, and size transitions. Built for dimensional consistency and dependable pressure performance in agricultural piping systems.",
+    badge: "Precision Fit"
+  },
+  {
+    id: "prod-fabricated-pipe-fittings",
+    name: "Fabricated Pipe Fittings",
+    category: "Fabricated Fittings",
+    price: 1650.00,
+    stock: 75,
+    image: "images/Fabricated Pipe.png",
+    specs: {
+      "Fitting Types": "Long bend, tee, manifold, custom spool",
+      "Build": "Workshop fabricated HDPE",
+      "Size Range": "110-315 mm",
+      "Customization": "Project-specific angles and branches",
+      "Application": "Large farm and industrial networks"
+    },
+    description: "Heavy-duty fabricated fittings for large irrigation layouts, manifolds, and custom pipe networks. Built to match site requirements where standard moulded fittings do not cover the needed angle, branch, or diameter.",
+    badge: "Custom Build"
   }
 ];
 
@@ -193,46 +414,7 @@ const INITIAL_USERS = [
   }
 ];
 
-const INITIAL_ORDERS = [
-  {
-    id: "ord-1001",
-    customerEmail: "farmer@gmail.com",
-    customerName: "John Farmer",
-    date: "2026-05-15",
-    items: [
-      {
-        productId: "prod-ls30",
-        name: "Lu Shyoung LS-30",
-        price: 28500.00,
-        quantity: 1
-      }
-    ],
-    total: 28500.00,
-    status: "delivered"
-  },
-  {
-    id: "ord-1002",
-    customerEmail: "farmer@gmail.com",
-    customerName: "John Farmer",
-    date: "2026-06-01",
-    items: [
-      {
-        productId: "prod-ls16e3",
-        name: "Lu Shyoung LS-16E-3",
-        price: 7800.00,
-        quantity: 2
-      },
-      {
-        productId: "prod-sm16",
-        name: "SM-16 Samarat",
-        price: 3200.00,
-        quantity: 1
-      }
-    ],
-    total: 18800.00,
-    status: "pending"
-  }
-];
+const INITIAL_ORDERS = [];
 
 const INITIAL_EVENTS = [
   {
@@ -252,6 +434,28 @@ const INITIAL_EVENTS = [
     badge: "Training"
   }
 ];
+
+const INITIAL_ENQUIRIES = [
+  {
+    id: "enq-1",
+    name: "Rajesh Kumar",
+    email: "rajesh@agrifarm.in",
+    phone: "+91 98765 43210",
+    interest: "Lu Shyoung Power Sprayers",
+    message: "Interested in LS-30 model. Do you ship to Maharashtra? Please provide a quote for 2 units.",
+    date: "2026-06-02"
+  },
+  {
+    id: "enq-2",
+    name: "Amit Patel",
+    email: "amit.patel@gujaratagri.org",
+    phone: "+91 87654 32109",
+    interest: "Battery Spray Pumps",
+    message: "Can the LS-16E-3 battery pump spray chemical weedicides? How long is the battery warranty?",
+    date: "2026-06-04"
+  }
+];
+
 
 // LocalStorage Helper
 function getStorage(key, defaultValue) {
@@ -278,8 +482,44 @@ let products = getStorage("mc_products", INITIAL_PRODUCTS);
 let users = getStorage("mc_users", INITIAL_USERS);
 let orders = getStorage("mc_orders", INITIAL_ORDERS);
 let events = getStorage("mc_events", INITIAL_EVENTS);
+let enquiries = getStorage("mc_enquiries", INITIAL_ENQUIRIES);
 let currentUser = getStorage("mc_current_user", null);
 let cart = getStorage("mc_cart", []);
+
+const seedSyncProductIds = [
+  "prod-hdpe-agri-pipe",
+  "prod-mdpe-utility-pipe",
+  "prod-electrofusion-coupler-kit",
+  "prod-electrofusion-reducing-tee",
+  "prod-electrofusion-equal-tee",
+  "prod-electrofusion-end-cap",
+  "prod-electrofusion-reducers",
+  "prod-electrofusion-elbow-90",
+  "prod-electrofusion-elbow-45",
+  "prod-electrofusion-elbow-225",
+  "prod-electrofusion-saddle",
+  "prod-moulded-hdpe-fittings",
+  "prod-fabricated-pipe-fittings"
+];
+// Filter out products that are defined in seedSyncProductIds but are no longer in INITIAL_PRODUCTS
+products = products.filter(product => {
+  if (seedSyncProductIds.includes(product.id)) {
+    return INITIAL_PRODUCTS.some(seedProduct => seedProduct.id === product.id);
+  }
+  return true;
+});
+
+products = products.map(product => {
+  if (!seedSyncProductIds.includes(product.id)) return product;
+  return INITIAL_PRODUCTS.find(seedProduct => seedProduct.id === product.id) || product;
+});
+
+const missingSeedProducts = INITIAL_PRODUCTS.filter(seedProduct => (
+  !products.some(product => product.id === seedProduct.id)
+));
+
+products = [...products, ...missingSeedProducts];
+localStorage.setItem("mc_products", JSON.stringify(products));
 
 // Callbacks Subscriptions
 const changeListeners = [];
@@ -376,95 +616,12 @@ export const State = {
     return currentUser;
   },
 
-  // Cart API
+  // Cart / Orders APIs retired in catalog mode
   getCart() {
-    return cart;
+    return [];
   },
-  addToCart(productId, qty = 1) {
-    const product = this.getProductById(productId);
-    if (!product) return;
-    
-    const cartItemIndex = cart.findIndex(item => item.productId === productId);
-    if (cartItemIndex > -1) {
-      cart[cartItemIndex].quantity += qty;
-    } else {
-      cart.push({
-        productId: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: qty
-      });
-    }
-    setStorage("mc_cart", cart);
-  },
-  updateCartQty(productId, qty) {
-    if (qty <= 0) {
-      this.removeFromCart(productId);
-      return;
-    }
-    const cartItem = cart.find(item => item.productId === productId);
-    if (cartItem) {
-      cartItem.quantity = qty;
-      setStorage("mc_cart", cart);
-    }
-  },
-  removeFromCart(productId) {
-    cart = cart.filter(item => item.productId !== productId);
-    setStorage("mc_cart", cart);
-  },
-  clearCart() {
-    cart = [];
-    setStorage("mc_cart", cart);
-  },
-  getCartSubtotal() {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  },
-  getCartCount() {
-    return cart.reduce((total, item) => total + item.quantity, 0);
-  },
-
-  // Orders API
   getOrders() {
-    return orders;
-  },
-  createOrder(shippingDetails, paymentDetails) {
-    if (cart.length === 0) {
-      throw new Error("Cannot checkout an empty cart.");
-    }
-    
-    // Deduct stock
-    cart.forEach(item => {
-      const prod = this.getProductById(item.productId);
-      if (prod) {
-        prod.stock = Math.max(0, prod.stock - item.quantity);
-      }
-    });
-    setStorage("mc_products", products);
-
-    const activeUser = currentUser || { email: shippingDetails.email, username: shippingDetails.name };
-    const newOrder = {
-      id: "ord-" + Math.floor(1000 + Math.random() * 9000),
-      customerEmail: activeUser.email,
-      customerName: activeUser.username,
-      shipping: shippingDetails,
-      payment: paymentDetails,
-      date: new Date().toISOString().split('T')[0],
-      items: [...cart],
-      total: this.getCartSubtotal(),
-      status: "pending"
-    };
-
-    orders.push(newOrder);
-    setStorage("mc_orders", orders);
-    this.clearCart();
-    return newOrder;
-  },
-  updateOrderStatus(orderId, status) {
-    const order = orders.find(o => o.id === orderId);
-    if (order) {
-      order.status = status;
-      setStorage("mc_orders", orders);
-    }
+    return [];
   },
 
   // Events API
@@ -483,6 +640,24 @@ export const State = {
   deleteEvent(id) {
     events = events.filter(e => e.id !== id);
     setStorage("mc_events", events);
+  },
+
+  // Enquiries API
+  getEnquiries() {
+    return enquiries;
+  },
+  saveEnquiry(enquiry) {
+    const existingIndex = enquiries.findIndex(e => e.id === enquiry.id);
+    if (existingIndex > -1) {
+      enquiries[existingIndex] = enquiry;
+    } else {
+      enquiries.push(enquiry);
+    }
+    setStorage("mc_enquiries", enquiries);
+  },
+  deleteEnquiry(id) {
+    enquiries = enquiries.filter(e => e.id !== id);
+    setStorage("mc_enquiries", enquiries);
   }
 };
 
@@ -502,6 +677,6 @@ export const State = {
         // Reload page to re-seed
         window.location.reload();
       }
-    } catch(e){}
+    } catch (e) { }
   }
 })();

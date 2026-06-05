@@ -5,7 +5,7 @@
 import { State } from '../state.js';
 import { Components, Icons, getCategoryIcon } from '../components.js';
 
-let activeAdminTab = 'dashboard'; // Options: dashboard, products, orders, customers, events
+let activeAdminTab = 'dashboard'; // Options: dashboard, products, orders, customers, events, enquiries
 
 export default async function renderAdmin(container, query) {
   const currentUser = State.getCurrentUser();
@@ -33,20 +33,27 @@ export default async function renderAdmin(container, query) {
               <button class="admin-nav-btn ${activeAdminTab === 'products' ? 'active' : ''}" data-tab="products">
                 ${Icons.powerSprayer} Products Manager
               </button>
-              <button class="admin-nav-btn ${activeAdminTab === 'orders' ? 'active' : ''}" data-tab="orders">
-                ${Icons.orders} Orders Ledger
-              </button>
               <button class="admin-nav-btn ${activeAdminTab === 'customers' ? 'active' : ''}" data-tab="customers">
                 ${Icons.users} Customers List
               </button>
               <button class="admin-nav-btn ${activeAdminTab === 'events' ? 'active' : ''}" data-tab="events">
                 ${Icons.calendar} Marketing Events
               </button>
+              <button class="admin-nav-btn ${activeAdminTab === 'enquiries' ? 'active' : ''}" data-tab="enquiries">
+                ${Icons.mail} Customer Enquiries
+              </button>
             </nav>
 
-            <button class="btn btn-secondary btn-full-width admin-logout-btn" id="admin-sidebar-logout-btn">
-              Sign Out
-            </button>
+            <div class="admin-sidebar-footer">
+              <a href="#home" class="admin-footer-btn back-store-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-btn-icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>View Store</span>
+              </a>
+              <button class="admin-footer-btn logout-btn" id="admin-sidebar-logout-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-btn-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Sign Out</span>
+              </button>
+            </div>
           </aside>
 
           <!-- Main Viewport -->
@@ -67,40 +74,34 @@ export default async function renderAdmin(container, query) {
 
     if (activeAdminTab === 'dashboard') drawDashboardTab(mainViewport);
     if (activeAdminTab === 'products') drawProductsTab(mainViewport);
-    if (activeAdminTab === 'orders') drawOrdersTab(mainViewport);
     if (activeAdminTab === 'customers') drawCustomersTab(mainViewport);
     if (activeAdminTab === 'events') drawEventsTab(mainViewport);
+    if (activeAdminTab === 'enquiries') drawEnquiriesTab(mainViewport);
   };
 
   // 1. Dashboard Overview Tab
   const drawDashboardTab = (viewport) => {
-    const ordersList = State.getOrders();
     const productsCount = State.getProducts().length;
     const usersCount = State.getUsers().length;
-    
-    // Compute total sales revenue
-    const totalSales = ordersList.reduce((acc, order) => acc + order.total, 0);
-    const pendingOrders = ordersList.filter(o => o.status === 'pending').length;
+    const eventsCount = State.getEvents().length;
+    const enquiriesCount = State.getEnquiries().length;
 
     viewport.innerHTML = `
       <div class="admin-view-header">
         <h2 class="admin-view-title">Overview Dashboard</h2>
+        <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back to Store
+        </a>
       </div>
 
       <!-- Metrics Cards -->
       <div class="admin-stats-grid">
         <div class="admin-stat-card glass-card">
-          <div class="admin-stat-icon">${Icons.orders}</div>
+          <div class="admin-stat-icon">${Icons.powerSprayer}</div>
           <div class="admin-stat-details">
-            <h4>Total Sales</h4>
-            <div class="admin-stat-value">₹${totalSales.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</div>
-          </div>
-        </div>
-        <div class="admin-stat-card glass-card">
-          <div class="admin-stat-icon">${Icons.check}</div>
-          <div class="admin-stat-details">
-            <h4>Active Orders</h4>
-            <div class="admin-stat-value">${pendingOrders} Pending</div>
+            <h4>Total Models</h4>
+            <div class="admin-stat-value">${productsCount} Sprayers</div>
           </div>
         </div>
         <div class="admin-stat-card glass-card">
@@ -111,41 +112,18 @@ export default async function renderAdmin(container, query) {
           </div>
         </div>
         <div class="admin-stat-card glass-card">
-          <div class="admin-stat-icon">${Icons.powerSprayer}</div>
+          <div class="admin-stat-icon">${Icons.calendar}</div>
           <div class="admin-stat-details">
-            <h4>Total Models</h4>
-            <div class="admin-stat-value">${productsCount} Sprayers</div>
+            <h4>Scheduled Events</h4>
+            <div class="admin-stat-value">${eventsCount} Scheduled</div>
           </div>
         </div>
-      </div>
-
-      <!-- Recent Orders Section -->
-      <div class="glass-card">
-        <h3 style="color: var(--color-primary); margin-bottom: 20px;">Recent Purchases Log</h3>
-        <div class="admin-table-wrapper">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Grower Name</th>
-                <th>Date</th>
-                <th>Total</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${ordersList.slice(-5).reverse().map(o => `
-                <tr>
-                  <td><strong>${o.id}</strong></td>
-                  <td>${o.customerName}</td>
-                  <td>${o.date}</td>
-                  <td style="font-weight: 700;">₹${o.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                  <td><span class="badge-status ${o.status}">${o.status}</span></td>
-                </tr>
-              `).join('')}
-              ${ordersList.length === 0 ? `<tr><td colspan="5" style="text-align: center; color: var(--color-text-muted);">No sales recorded yet.</td></tr>` : ''}
-            </tbody>
-          </table>
+        <div class="admin-stat-card glass-card">
+          <div class="admin-stat-icon">${Icons.mail}</div>
+          <div class="admin-stat-details">
+            <h4>Active Enquiries</h4>
+            <div class="admin-stat-value">${enquiriesCount} Inquiries</div>
+          </div>
         </div>
       </div>
     `;
@@ -158,9 +136,47 @@ export default async function renderAdmin(container, query) {
     viewport.innerHTML = `
       <div class="admin-view-header">
         <h2 class="admin-view-title">Products Inventory Manager</h2>
-        <button class="btn btn-primary" id="admin-add-product-btn">
-          ${Icons.plus} Add New Sprayer
-        </button>
+        <div class="admin-view-header-actions" style="display: flex; gap: 8px; align-items: center;">
+          <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back to Store
+          </a>
+          <button class="btn btn-primary" id="admin-add-product-btn">
+            ${Icons.plus} Add New Sprayer
+          </button>
+        </div>
+      </div>
+
+      <!-- Bulk Price Adjustment Card -->
+      <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="font-size: 1.1rem; color: var(--color-primary); margin-bottom: 16px;">Bulk Price Adjustment</h3>
+        <div class="admin-bulk-adjust-row">
+          <div class="form-group" style="margin: 0; min-width: 200px;">
+            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">Filter by Category</label>
+            <select id="bulk-adjust-category" class="form-select" style="height: 38px; padding: 0 12px; font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.08); border-radius: 6px; width: 100%; background: #fff;">
+              <option value="all">All Categories</option>
+              <option value="Power Sprayers">Power Sprayers</option>
+              <option value="Knapsack Sprayers">Knapsack Sprayers</option>
+              <option value="Battery Spray Pumps">Battery Spray Pumps</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0; min-width: 180px;">
+            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">Adjustment Type</label>
+            <select id="bulk-adjust-type" class="form-select" style="height: 38px; padding: 0 12px; font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.08); border-radius: 6px; width: 100%; background: #fff;">
+              <option value="percent-inc">Increase by Percentage (%)</option>
+              <option value="percent-dec">Decrease by Percentage (%)</option>
+              <option value="fixed-inc">Increase by Fixed Amount (₹)</option>
+              <option value="fixed-dec">Decrease by Fixed Amount (₹)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin: 0; max-width: 120px;">
+            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">Value</label>
+            <input type="number" id="bulk-adjust-value" class="form-input" placeholder="e.g. 5" style="height: 38px; padding: 0 12px; font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.08); border-radius: 6px; width: 100%; background: #fff;" min="0">
+          </div>
+          <button class="btn btn-primary" id="btn-apply-bulk-price" style="height: 38px; padding: 0 20px; font-size: 0.85rem; border-radius: 8px;">
+            Apply Adjustments
+          </button>
+        </div>
       </div>
 
       <div class="glass-card">
@@ -194,19 +210,17 @@ export default async function renderAdmin(container, query) {
                     </td>
                     <td>${p.category}</td>
                     <td>
-                      <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="number" class="form-input admin-price-adjust-field" data-id="${p.id}" value="${p.price}" style="padding: 6px 10px; font-size: 0.85rem; width: 100px; text-align: right; font-weight: 700;" step="1">
-                        <button class="btn-action btn-save-price" data-id="${p.id}" title="Save Price" style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary);">
-                          ${Icons.check}
-                        </button>
-                      </div>
+                      <input type="number" class="form-input admin-price-adjust-field" data-id="${p.id}" value="${p.price}" style="padding: 6px 10px; font-size: 0.85rem; width: 110px; text-align: right; font-weight: 700;" step="1">
                     </td>
                     <td>
                       <input type="number" class="form-input admin-stock-adjust-field" data-id="${p.id}" value="${p.stock}" style="padding: 6px 10px; font-size: 0.85rem; width: 70px; text-align: center;">
                     </td>
                     <td>
                       <div class="admin-actions-cell">
-                        <button class="btn-action btn-delete-product" data-id="${p.id}" title="Delete Sprayer">
+                        <button class="btn-action btn-save-price" data-id="${p.id}" title="Save Changes" style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary);">
+                          ${Icons.check}
+                        </button>
+                        <button class="btn-action btn-action-delete btn-delete-product" data-id="${p.id}" title="Delete Sprayer">
                           ${Icons.trash}
                         </button>
                       </div>
@@ -249,6 +263,57 @@ export default async function renderAdmin(container, query) {
         }
       });
     });
+
+    // Bind Bulk Price Adjustment Actions
+    const btnApplyBulk = viewport.querySelector('#btn-apply-bulk-price');
+    if (btnApplyBulk) {
+      btnApplyBulk.addEventListener('click', () => {
+        const catSelect = viewport.querySelector('#bulk-adjust-category').value;
+        const typeSelect = viewport.querySelector('#bulk-adjust-type').value;
+        const valInput = parseFloat(viewport.querySelector('#bulk-adjust-value').value);
+
+        if (isNaN(valInput) || valInput <= 0) {
+          Components.showToast('Please enter a valid positive adjustment value.', 'error');
+          return;
+        }
+
+        const allProducts = State.getProducts();
+        let affectedCount = 0;
+
+        allProducts.forEach(p => {
+          if (catSelect !== 'all' && p.category !== catSelect) {
+            return;
+          }
+
+          let newPrice = p.price;
+          if (typeSelect === 'percent-inc') {
+            newPrice = p.price * (1 + valInput / 100);
+          } else if (typeSelect === 'percent-dec') {
+            newPrice = p.price * (1 - valInput / 100);
+          } else if (typeSelect === 'fixed-inc') {
+            newPrice = p.price + valInput;
+          } else if (typeSelect === 'fixed-dec') {
+            newPrice = p.price - valInput;
+          }
+
+          // Round to nearest Rupee
+          newPrice = Math.max(0, Math.round(newPrice));
+          
+          if (newPrice !== p.price) {
+            p.price = newPrice;
+            State.saveProduct(p);
+            affectedCount++;
+          }
+        });
+
+        if (affectedCount > 0) {
+          Components.showToast(`Successfully adjusted price for ${affectedCount} product(s).`, 'success');
+          drawProductsTab(viewport); // Refresh table
+        } else {
+          Components.showToast('No matching products found to update.', 'info');
+        }
+      });
+    }
 
     // Bind delete sprayer
     viewport.querySelectorAll('.btn-delete-product').forEach(btn => {
@@ -313,7 +378,7 @@ export default async function renderAdmin(container, query) {
 
             <div style="display: flex; gap: 16px; margin-top: 24px;">
               <button type="submit" class="btn btn-primary">Create Product</button>
-              <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-overlay').classList.remove('open')">Cancel</button>
+              <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">Cancel</button>
             </div>
           </form>
         `);
@@ -367,69 +432,7 @@ export default async function renderAdmin(container, query) {
     }
   };
 
-  // 3. Orders Ledger Tab (with Status Dropdowns)
-  const drawOrdersTab = (viewport) => {
-    const orders = State.getOrders();
 
-    viewport.innerHTML = `
-      <div class="admin-view-header">
-        <h2 class="admin-view-title">Sales Orders Ledger</h2>
-      </div>
-
-      <div class="glass-card">
-        <div class="admin-table-wrapper">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Farmer Name</th>
-                <th>Purchase Date</th>
-                <th>Items Ordered</th>
-                <th>Total Value</th>
-                <th>Dispatch Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${orders.map(o => `
-                <tr>
-                  <td><strong>${o.id}</strong></td>
-                  <td>
-                    <div>${o.customerName}</div>
-                    <div style="font-size: 0.75rem; color: var(--color-text-muted);">${o.customerEmail}</div>
-                  </td>
-                  <td>${o.date}</td>
-                  <td>
-                    <ul style="list-style: none; padding: 0; font-size: 0.8rem; color: var(--color-text-muted);">
-                      ${o.items.map(item => `<li>${item.quantity}x ${item.name}</li>`).join('')}
-                    </ul>
-                  </td>
-                  <td style="font-weight: 700;">₹${o.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                  <td>
-                    <select class="form-select admin-order-status-select" data-id="${o.id}" aria-label="Change status for order ${o.id}" style="padding: 6px 10px; font-size: 0.8rem; background: var(--color-bg); width: 130px; box-shadow: none;">
-                      <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pending</option>
-                      <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
-                      <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
-                    </select>
-                  </td>
-                </tr>
-              `).join('')}
-              ${orders.length === 0 ? `<tr><td colspan="6" style="text-align: center; color: var(--color-text-muted);">No sales orders recorded yet.</td></tr>` : ''}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-
-    // Bind order status selector modifications
-    viewport.querySelectorAll('.admin-order-status-select').forEach(sel => {
-      sel.addEventListener('change', (e) => {
-        const id = e.target.dataset.id;
-        const newStatus = e.target.value;
-        State.updateOrderStatus(id, newStatus);
-        Components.showToast(`Order ${id} status set to ${newStatus}.`, 'success');
-      });
-    });
-  };
 
   // 4. Customers List Tab
   const drawCustomersTab = (viewport) => {
@@ -438,6 +441,10 @@ export default async function renderAdmin(container, query) {
     viewport.innerHTML = `
       <div class="admin-view-header">
         <h2 class="admin-view-title">Registered Customer Ledger</h2>
+        <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back to Store
+        </a>
       </div>
 
       <div class="glass-card">
@@ -480,9 +487,15 @@ export default async function renderAdmin(container, query) {
     viewport.innerHTML = `
       <div class="admin-view-header">
         <h2 class="admin-view-title">Marketing Events Manager</h2>
-        <button class="btn btn-primary" id="admin-add-event-btn">
-          ${Icons.plus} Schedule Event
-        </button>
+        <div class="admin-view-header-actions" style="display: flex; gap: 8px; align-items: center;">
+          <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back to Store
+          </a>
+          <button class="btn btn-primary" id="admin-add-event-btn">
+            ${Icons.plus} Schedule Event
+          </button>
+        </div>
       </div>
 
       <div class="glass-card" style="margin-bottom: 32px;">
@@ -506,7 +519,7 @@ export default async function renderAdmin(container, query) {
                   <td style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${ev.description}</td>
                   <td>
                     <div class="admin-actions-cell">
-                      <button class="btn-action btn-delete-event" data-id="${ev.id}" title="Remove Event">
+                      <button class="btn-action btn-action-delete btn-delete-event" data-id="${ev.id}" title="Remove Event">
                         ${Icons.trash}
                       </button>
                     </div>
@@ -561,7 +574,7 @@ export default async function renderAdmin(container, query) {
 
             <div style="display: flex; gap: 16px; margin-top: 24px;">
               <button type="submit" class="btn btn-primary">Publish Event</button>
-              <button type="button" class="btn btn-secondary" onclick="document.getElementById('modal-overlay').classList.remove('open')">Cancel</button>
+              <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">Cancel</button>
             </div>
           </form>
         `);
@@ -598,6 +611,127 @@ export default async function renderAdmin(container, query) {
         }
       });
     }
+  };
+
+  // 6. Customer Enquiries Tab
+  const drawEnquiriesTab = (viewport) => {
+    const enquiries = State.getEnquiries();
+
+    viewport.innerHTML = `
+      <div class="admin-view-header">
+        <h2 class="admin-view-title">Customer Enquiries & Leads</h2>
+        <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back to Store
+        </a>
+      </div>
+
+      <div class="glass-card">
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Customer Name</th>
+                <th>Contact Info</th>
+                <th>Interest</th>
+                <th>Message Snippet</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${enquiries.map(e => `
+                <tr data-id="${e.id}">
+                  <td><strong>${e.name}</strong></td>
+                  <td>
+                    <div style="font-size: 0.85rem; color: var(--color-text);">
+                      <div>${e.email}</div>
+                      <div style="color: var(--color-text-muted);">${e.phone}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <span style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">
+                      ${e.interest}
+                    </span>
+                  </td>
+                  <td style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                    ${e.message}
+                  </td>
+                  <td>${e.date}</td>
+                  <td>
+                    <div class="admin-actions-cell">
+                      <button class="btn-action btn-view-enquiry" data-id="${e.id}" title="View Full Message" style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary);">
+                        ${Icons.info}
+                      </button>
+                      <button class="btn-action btn-action-delete btn-delete-enquiry" data-id="${e.id}" title="Delete Enquiry">
+                        ${Icons.trash}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+              ${enquiries.length === 0 ? `<tr><td colspan="6" style="text-align: center; color: var(--color-text-muted);">No enquiries found.</td></tr>` : ''}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+
+    // Bind view details action
+    viewport.querySelectorAll('.btn-view-enquiry').forEach(btn => {
+      btn.addEventListener('click', (ev) => {
+        const id = ev.currentTarget.dataset.id;
+        const enquiry = enquiries.find(e => e.id === id);
+        if (enquiry) {
+          Components.showModal(`
+            <h2 style="font-family: var(--font-headings); color: var(--color-primary); margin-bottom: 16px;">Enquiry Details</h2>
+            <div style="display: flex; flex-direction: column; gap: 16px; font-size: 0.95rem; line-height: 1.5; color: var(--color-text);">
+              <div>
+                <strong>From:</strong> ${enquiry.name}
+              </div>
+              <div class="enquiry-details-meta-grid">
+                <div>
+                  <strong>Email:</strong> <a href="mailto:${enquiry.email}" style="color: var(--color-accent); text-decoration: underline;">${enquiry.email}</a>
+                </div>
+                <div>
+                  <strong>Phone:</strong> ${enquiry.phone}
+                </div>
+              </div>
+              <div>
+                <strong>Interest:</strong> <span style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 700;">${enquiry.interest}</span>
+              </div>
+              <div>
+                <strong>Received Date:</strong> ${enquiry.date}
+              </div>
+              <hr style="border: 0; border-top: 1px solid rgba(0,0,0,0.08); margin: 8px 0;">
+              <div>
+                <strong>Message:</strong>
+                <p style="background: var(--color-bg); padding: 16px; border-radius: 8px; border: var(--glass-border); margin-top: 8px; white-space: pre-wrap; word-break: break-word;">${enquiry.message}</p>
+              </div>
+              <div class="enquiry-details-actions">
+                <a href="mailto:${enquiry.email}?subject=Re: Make Corner Enquiry regarding ${encodeURIComponent(enquiry.interest)}" class="btn btn-primary">
+                  ${Icons.mail} Reply by Email
+                </a>
+                <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">Close</button>
+              </div>
+            </div>
+          `);
+        }
+      });
+    });
+
+    // Bind delete action
+    viewport.querySelectorAll('.btn-delete-enquiry').forEach(btn => {
+      btn.addEventListener('click', (ev) => {
+        const id = ev.currentTarget.dataset.id;
+        const enquiry = enquiries.find(e => e.id === id);
+        if (enquiry && confirm(`Are you sure you want to remove the enquiry from ${enquiry.name}?`)) {
+          State.deleteEnquiry(id);
+          Components.showToast(`Enquiry from ${enquiry.name} deleted.`, 'info');
+          drawEnquiriesTab(viewport);
+        }
+      });
+    });
   };
 
   // Bind sidebar button tab clicks

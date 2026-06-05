@@ -89,123 +89,10 @@ export const Components = {
     }
     document.body.style.overflow = '';
   },
-
-  // Drawer Shopping Cart overlay
-  toggleCartDrawer(open = true) {
-    const overlay = document.getElementById('cart-drawer-overlay');
-    if (!overlay) return;
-    if (open) {
-      this.updateCartDrawer();
-      overlay.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    } else {
-      overlay.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-  },
-
-  // Redraws the contents of the Cart Drawer overlay
-  updateCartDrawer() {
-    const cartItemsContainer = document.getElementById('cart-drawer-items');
-    const badgeCount = document.getElementById('cart-badge-count');
-    const itemsCount = document.getElementById('cart-items-count');
-    const subtotalText = document.getElementById('cart-subtotal-price');
-
-    if (!cartItemsContainer) return;
-
-    const cart = State.getCart();
-    const subtotal = State.getCartSubtotal();
-    const count = State.getCartCount();
-
-    // Update headers and badges
-    if (badgeCount) badgeCount.textContent = count;
-    if (itemsCount) itemsCount.textContent = count;
-    if (subtotalText) subtotalText.textContent = `₹${subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-    // Render Items
-    if (cart.length === 0) {
-      cartItemsContainer.innerHTML = `
-        <div class="cart-empty-state">
-          ${Icons.cart}
-          <p>Your agricultural cart is empty.</p>
-          <a href="#shop" class="btn btn-secondary mt-2" id="cart-drawer-browse-btn">Browse Shop</a>
-        </div>
-      `;
-      // Close drawer on click browse
-      const browseBtn = document.getElementById('cart-drawer-browse-btn');
-      if (browseBtn) {
-        browseBtn.addEventListener('click', () => this.toggleCartDrawer(false));
-      }
-      return;
-    }
-
-    let itemsHTML = '';
-    cart.forEach(item => {
-      const prod = State.getProductById(item.productId);
-      
-      // Load generated image or use SVG fallback
-      const iconOrImage = prod && prod.image 
-        ? `<img src="${prod.image}" alt="${item.name}">`
-        : getCategoryIcon(prod ? prod.category : '');
-      
-      itemsHTML += `
-        <div class="cart-item" data-id="${item.productId}">
-          <div class="cart-item-icon">
-            ${iconOrImage}
-          </div>
-          <div class="cart-item-details">
-            <h4 class="cart-item-title">${item.name}</h4>
-            <span class="cart-item-price">₹${item.price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-            <div class="cart-item-qty-control">
-              <button class="qty-btn dec-qty" data-id="${item.productId}">-</button>
-              <span class="qty-val">${item.quantity}</span>
-              <button class="qty-btn inc-qty" data-id="${item.productId}">+</button>
-            </div>
-          </div>
-          <button class="cart-item-remove-btn" data-id="${item.productId}" aria-label="Remove item">
-            ${Icons.trash}
-          </button>
-        </div>
-      `;
-    });
-
-    cartItemsContainer.innerHTML = itemsHTML;
-
-    // Attach listeners dynamically
-    cartItemsContainer.querySelectorAll('.dec-qty').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = e.target.dataset.id;
-        const currentItem = cart.find(item => item.productId === id);
-        if (currentItem) {
-          State.updateCartQty(id, currentItem.quantity - 1);
-        }
-      });
-    });
-
-    cartItemsContainer.querySelectorAll('.inc-qty').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = e.target.dataset.id;
-        const currentItem = cart.find(item => item.productId === id);
-        const product = State.getProductById(id);
-        if (currentItem && product) {
-          if (currentItem.quantity >= product.stock) {
-            this.showToast(`Cannot add more. Only ${product.stock} units available in stock.`, 'warning');
-            return;
-          }
-          State.updateCartQty(id, currentItem.quantity + 1);
-        }
-      });
-    });
-
-    cartItemsContainer.querySelectorAll('.cart-item-remove-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = e.currentTarget.dataset.id;
-        State.removeFromCart(id);
-        this.showToast('Item removed from cart.', 'info');
-      });
-    });
-  }
 };
+
+// Expose Components globally for inline HTML event handlers
+window.Components = Components;
 
 // Global helper to select matching category icon SVG
 export function getCategoryIcon(category) {
@@ -217,24 +104,7 @@ export function getCategoryIcon(category) {
 
 // Bind Global Modals and Drawer Handlers
 document.addEventListener('DOMContentLoaded', () => {
-  // Cart Drawer open/close triggers
-  const cartToggleBtn = document.getElementById('cart-toggle-btn');
-  const cartCloseBtn = document.getElementById('cart-drawer-close-btn');
-  const cartOverlay = document.getElementById('cart-drawer-overlay');
 
-  if (cartToggleBtn) {
-    cartToggleBtn.addEventListener('click', () => Components.toggleCartDrawer(true));
-  }
-  if (cartCloseBtn) {
-    cartCloseBtn.addEventListener('click', () => Components.toggleCartDrawer(false));
-  }
-  if (cartOverlay) {
-    cartOverlay.addEventListener('click', (e) => {
-      if (e.target === cartOverlay) {
-        Components.toggleCartDrawer(false);
-      }
-    });
-  }
 
   // Modal close trigger
   const modalCloseBtn = document.getElementById('modal-close-btn');
@@ -251,19 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Checkout trigger - Updated to redirect to #checkout page
-  const checkoutBtn = document.getElementById('cart-checkout-btn');
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-      const cart = State.getCart();
-      if (cart.length === 0) {
-        Components.showToast('Your cart is empty. Add sprayers to checkout.', 'warning');
-        return;
-      }
-      Components.toggleCartDrawer(false);
-      window.location.hash = '#checkout';
-    });
-  }
+
 
   // Newsletter Form handler
   const newsletterForm = document.getElementById('newsletter-form');
@@ -283,13 +141,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const navMenu = document.getElementById('nav-menu');
 
   if (mobileMenuBtn && navMenu) {
+    navMenu.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+      const trigger = dropdown.querySelector('.nav-dropdown-trigger');
+      const openDropdown = () => {
+        dropdown.classList.add('is-open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      };
+      const closeDropdown = () => {
+        dropdown.classList.remove('is-open');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      };
+
+      dropdown.addEventListener('mouseenter', openDropdown);
+      dropdown.addEventListener('mouseleave', closeDropdown);
+      dropdown.addEventListener('focusin', openDropdown);
+      dropdown.addEventListener('focusout', closeDropdown);
+    });
+
     mobileMenuBtn.addEventListener('click', () => {
       mobileMenuBtn.classList.toggle('open');
       navMenu.classList.toggle('open');
     });
 
-    // Close menu when clicking nav links
-    navMenu.querySelectorAll('.nav-link').forEach(link => {
+    // Close menu when clicking navigation targets
+    navMenu.querySelectorAll('.nav-link, .nav-dropdown-menu a').forEach(link => {
       link.addEventListener('click', () => {
         mobileMenuBtn.classList.remove('open');
         navMenu.classList.remove('open');
@@ -309,11 +184,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Keep cart drawer sync'd up
-  State.subscribe(() => {
-    Components.updateCartDrawer();
-  });
 
-  // Initial draw of drawer
-  Components.updateCartDrawer();
 });

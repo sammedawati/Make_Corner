@@ -3,8 +3,24 @@
    ========================================================================== */
 
 import { Components, Icons } from '../components.js';
+import { State } from '../state.js';
 
 export default async function renderContact(container, query) {
+  let initialMessage = '';
+  let interestVal = 'general';
+
+  if (query && query.product) {
+    const prodName = decodeURIComponent(query.product);
+    initialMessage = `Hello Make Corner team, I would like to receive detailed information and a pricing quote for the ${prodName} sprayer model. Thank you.`;
+    
+    const products = State.getProducts();
+    const product = products.find(p => p.name.toLowerCase() === prodName.toLowerCase() || p.id.toLowerCase() === prodName.toLowerCase());
+    if (product) {
+      if (product.category === "Power Sprayers") interestVal = "power";
+      else if (product.category === "Knapsack Sprayers") interestVal = "knapsack";
+      else if (product.category === "Battery Spray Pumps") interestVal = "battery";
+    }
+  }
   container.innerHTML = `
     <section class="section-padding">
       <div class="container">
@@ -40,17 +56,17 @@ export default async function renderContact(container, query) {
                 <div class="form-group">
                   <label for="contact-interest" class="form-label">Equipment of Interest</label>
                   <select id="contact-interest" class="form-select" aria-label="Select equipment of interest">
-                    <option value="general">General Support / Parts</option>
-                    <option value="power">Lu Shyoung Power Sprayers</option>
-                    <option value="knapsack">Knapsack Sprayers (Manual / Power)</option>
-                    <option value="battery">Battery Spray Pumps</option>
+                    <option value="general" ${interestVal === 'general' ? 'selected' : ''}>General Support / Parts</option>
+                    <option value="power" ${interestVal === 'power' ? 'selected' : ''}>Lu Shyoung Power Sprayers</option>
+                    <option value="knapsack" ${interestVal === 'knapsack' ? 'selected' : ''}>Knapsack Sprayers (Manual / Power)</option>
+                    <option value="battery" ${interestVal === 'battery' ? 'selected' : ''}>Battery Spray Pumps</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group" style="margin-top: 16px;">
                 <label for="contact-message" class="form-label">Your Message *</label>
-                <textarea id="contact-message" class="form-textarea" rows="5" placeholder="Specify model questions or custom sprayer setups..." required></textarea>
+                <textarea id="contact-message" class="form-textarea" rows="5" placeholder="Specify model questions or custom sprayer setups..." required>${initialMessage}</textarea>
                 <div class="form-error-msg" id="err-message" style="display: none;">Message is required (minimum 10 characters).</div>
               </div>
 
@@ -175,6 +191,22 @@ function bindContactFormEvents(container) {
     }
 
     if (isValid) {
+      const interestInput = document.getElementById('contact-interest');
+      const phoneInput = document.getElementById('contact-phone');
+      const selectedInterestText = interestInput ? interestInput.options[interestInput.selectedIndex].text : 'General Support / Parts';
+
+      const newEnquiry = {
+        id: "enq-" + Date.now(),
+        name: nameInput.value.trim(),
+        email: emailInput.value.trim(),
+        phone: phoneInput ? (phoneInput.value.trim() || "N/A") : "N/A",
+        interest: selectedInterestText,
+        message: messageInput.value.trim(),
+        date: new Date().toISOString().split('T')[0]
+      };
+
+      State.saveEnquiry(newEnquiry);
+
       // Success toast
       Components.showToast(`Thank you, ${nameInput.value}! Your message has been sent to our tech team.`, 'success');
       form.reset();

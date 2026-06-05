@@ -11,7 +11,7 @@ export default async function renderAbout(container, query) {
       <div class="container about-hero-grid">
         <div class="about-story">
           <span class="section-subtitle">Our Heritage</span>
-          <h1 class="section-title" style="margin-bottom: 24px;">Specialized in Crop Protection Since 2011</h1>
+          <h1 class="section-title" style="margin-bottom: 20px;">Specialized in Crop Protection Since 2011</h1>
           <p>
             Make Corner (originally established as Mech Corner) was founded with a single mission: to provide farmers with durable, highly-efficient agricultural spraying equipment that withstands the test of time. Over the last decade, we have established ourselves as the premier distributor of Lu Shyoung pressure pumps and spray accessories.
           </p>
@@ -135,7 +135,7 @@ function bindAccordionEvents(container) {
 
   accordionItems.forEach(item => {
     const header = item.querySelector('.accordion-header');
-    
+
     header.addEventListener('click', () => {
       const isActive = item.classList.contains('active');
 

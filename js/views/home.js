@@ -30,11 +30,81 @@ export default async function renderHome(container, query) {
           </div>
         </div>
         <div class="hero-image-wrapper">
-          <div class="hero-image-container">
-            <img src="images/power_sprayer.png" alt="Lu Shyoung LS-30 Plunger Pump on stand">
-            <div class="hero-badge">
-              <span class="hero-badge-number">45</span>
-              <span class="hero-badge-text">Bar Max Working Pressure</span>
+          <div class="hero-slider-container">
+            <div class="hero-slider-track" id="hero-slider-track">
+              <!-- Slide 1: Power Sprayer -->
+              <div class="hero-slide active">
+                <img src="images/power_sprayer.png" alt="Lu Shyoung LS-30 Power Sprayer">
+                <div class="hero-badge">
+                  <span class="hero-badge-number">45</span>
+                  <span class="hero-badge-text">Bar Max Working Pressure</span>
+                </div>
+              </div>
+              <!-- Slide 2: Knapsack Sprayer -->
+              <div class="hero-slide">
+                <img src="images/knapsack_sprayer.png" alt="Manual Backpack Sprayer">
+                <div class="hero-badge">
+                  <span class="hero-badge-number">16</span>
+                  <span class="hero-badge-text">Liters Tank Capacity</span>
+                </div>
+              </div>
+              <!-- Slide 3: Battery Sprayer -->
+              <div class="hero-slide">
+                <img src="images/battery_sprayer.png" alt="12V Battery Spray Pump">
+                <div class="hero-badge">
+                  <span class="hero-badge-number">12V</span>
+                  <span class="hero-badge-text">High Capacity Battery</span>
+                </div>
+              </div>
+              <!-- Slide 4: HDPE Pipes -->
+              <div class="hero-slide">
+                <img src="images/HDPE_Pipe.svg.avif" alt="HDPE Agricultural Pipes">
+                <div class="hero-badge">
+                  <span class="hero-badge-number">DN20</span>
+                  <span class="hero-badge-text">to DN315 Diameter Range</span>
+                </div>
+              </div>
+              <!-- Slide 5: MDPE Pipes -->
+              <div class="hero-slide">
+                <img src="images/MDPE_pipe.png" alt="MDPE Utility Pipe">
+                <div class="hero-badge">
+                  <span class="hero-badge-number">12</span>
+                  <span class="hero-badge-text">Bar Max Working Pressure</span>
+                </div>
+              </div>
+              <!-- Slide 6: Fabricated Fittings -->
+              <div class="hero-slide">
+                <img src="images/Fabricated Pipe.png" alt="Fabricated HDPE Fittings">
+                <div class="hero-badge">
+                  <span class="hero-badge-number">ISO</span>
+                  <span class="hero-badge-text">Certified Fabricated Fittings</span>
+                </div>
+              </div>
+              <!-- Slide 7: Modular HDPE -->
+              <div class="hero-slide">
+                <img src="images/Moduled HDPE.png" alt="Moulded HDPE Pipe Fittings">
+                <div class="hero-badge">
+                  <span class="hero-badge-number">100%</span>
+                  <span class="hero-badge-text">Virgin HDPE Grade Material</span>
+                </div>
+              </div>
+            </div>
+            <!-- Slider Navigation Arrows -->
+            <button class="hero-slide-nav prev" id="hero-slide-prev" aria-label="Previous Slide">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="hero-slide-nav next" id="hero-slide-next" aria-label="Next Slide">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+            <!-- Slide Indicators/Dots -->
+            <div class="hero-slider-dots" id="hero-slider-dots">
+              <span class="hero-dot active" data-slide="0"></span>
+              <span class="hero-dot" data-slide="1"></span>
+              <span class="hero-dot" data-slide="2"></span>
+              <span class="hero-dot" data-slide="3"></span>
+              <span class="hero-dot" data-slide="4"></span>
+              <span class="hero-dot" data-slide="5"></span>
+              <span class="hero-dot" data-slide="6"></span>
             </div>
           </div>
         </div>
@@ -186,6 +256,7 @@ export default async function renderHome(container, query) {
   // Attach interactive features and product listeners
   bindFeaturedProductEvents(container);
   bindTestimonialsCarousel();
+  bindHeroSlider();
 }
 
 function renderFeaturedProductCard(product) {
@@ -198,9 +269,8 @@ function renderFeaturedProductCard(product) {
     : categoryIcon;
 
   return `
-    <div class="product-card">
+    <div class="product-card" data-id="${product.id}" style="cursor: pointer;">
       <div class="product-card-img-container">
-        ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
         ${imgTag}
       </div>
       <div class="product-card-content">
@@ -211,24 +281,10 @@ function renderFeaturedProductCard(product) {
           ${specsSnippet.map(([key, val]) => `<span class="spec-tag">${key}: ${val}</span>`).join('')}
         </div>
 
-        <!-- Quantity Selector Widget -->
-        <div class="product-card-qty-wrapper">
-          <span class="card-qty-label">Quantity:</span>
-          <div class="card-qty-selector">
-            <button class="qty-btn card-dec-qty" data-id="${product.id}">-</button>
-            <input type="number" class="card-qty-input" id="qty-input-${product.id}" value="1" min="1" max="${product.stock}" readonly aria-label="Select quantity">
-            <button class="qty-btn card-inc-qty" data-id="${product.id}">+</button>
-          </div>
-        </div>
-
         <div class="product-card-footer">
-          <span class="product-card-price">₹${product.price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-          <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary btn-view-details" data-id="${product.id}" style="padding: 8px 16px; font-size: 0.8rem;">Specs</button>
-            <button class="btn btn-primary btn-card-add-primary btn-add-cart" data-id="${product.id}">
-              Add to Cart
-            </button>
-          </div>
+          <a href="#contact?product=${encodeURIComponent(product.name)}" class="btn btn-primary btn-card-add-primary" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; padding: 8px 16px; font-size: 0.8rem; width: 100%;">
+            Get Quote
+          </a>
         </div>
       </div>
     </div>
@@ -236,40 +292,14 @@ function renderFeaturedProductCard(product) {
 }
 
 function bindFeaturedProductEvents(container) {
-  // Quantity buttons events on cards
-  container.querySelectorAll('.card-dec-qty').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const id = e.target.dataset.id;
-      const input = document.getElementById(`qty-input-${id}`);
-      if (input) {
-        let val = parseInt(input.value);
-        if (val > 1) {
-          input.value = val - 1;
-        }
+  // Detail card click handler
+  container.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Avoid triggering when clicking child links or buttons
+      if (e.target.closest('a') || e.target.closest('button')) {
+        return;
       }
-    });
-  });
-
-  container.querySelectorAll('.card-inc-qty').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const id = e.target.dataset.id;
-      const input = document.getElementById(`qty-input-${id}`);
-      const product = State.getProductById(id);
-      if (input && product) {
-        let val = parseInt(input.value);
-        if (val < product.stock) {
-          input.value = val + 1;
-        } else {
-          Components.showToast(`Cannot select more. Only ${product.stock} units in stock.`, 'warning');
-        }
-      }
-    });
-  });
-
-  // Detail button handler
-  container.querySelectorAll('.btn-view-details').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const id = e.target.dataset.id;
+      const id = card.dataset.id;
       const product = State.getProductById(id);
       if (product) {
         const categoryIcon = getCategoryIcon(product.category);
@@ -288,7 +318,6 @@ function bindFeaturedProductEvents(container) {
             <div class="product-detail-info">
               <span class="product-detail-category">${product.category}</span>
               <h2 class="product-detail-title">${product.name}</h2>
-              <span class="product-detail-price">₹${product.price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
               <p class="product-detail-desc">${product.description}</p>
               
               <h4 style="margin-top: 12px; color: var(--color-primary);">Technical Specifications</h4>
@@ -300,60 +329,14 @@ function bindFeaturedProductEvents(container) {
               </table>
 
               <div class="product-detail-actions">
-                <button class="btn btn-primary modal-add-to-cart-btn" data-id="${product.id}" ${product.stock === 0 ? 'disabled' : ''}>
-                  Add to Cart
-                </button>
-                <button class="btn btn-secondary" onclick="document.getElementById('modal-overlay').classList.remove('open')">Close</button>
+                <a href="#contact?product=${encodeURIComponent(product.name)}" class="btn btn-primary" onclick="Components.hideModal()" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                  Inquire About Product
+                </a>
+                <button class="btn btn-secondary" onclick="Components.hideModal()">Close</button>
               </div>
             </div>
           </div>
         `);
-
-        // Bind inner modal click
-        const modalAddBtn = document.querySelector('.modal-add-to-cart-btn');
-        if (modalAddBtn) {
-          modalAddBtn.addEventListener('click', (ev) => {
-            const prodId = ev.target.dataset.id;
-            State.addToCart(prodId, 1);
-            Components.showToast(`${product.name} added to cart!`, 'success');
-            Components.hideModal();
-            // Fast slide drawer open
-            setTimeout(() => {
-              Components.toggleCartDrawer(true);
-            }, 100);
-          });
-        }
-      }
-    });
-  });
-
-  // Direct Cart addition button
-  container.querySelectorAll('.btn-add-cart').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const id = e.currentTarget.dataset.id;
-      const product = State.getProductById(id);
-      const input = document.getElementById(`qty-input-${id}`);
-      const qty = input ? parseInt(input.value) : 1;
-
-      if (product) {
-        if (product.stock <= 0) {
-          Components.showToast('Sorry, this product is currently out of stock.', 'warning');
-          return;
-        }
-        if (qty > product.stock) {
-          Components.showToast(`Only ${product.stock} units available.`, 'warning');
-          return;
-        }
-        State.addToCart(id, qty);
-        Components.showToast(`${qty}x ${product.name} added to cart!`, 'success');
-        
-        // Reset card input qty to 1
-        if (input) input.value = 1;
-
-        // Slide open the cart drawer instantly to verify speed!
-        setTimeout(() => {
-          Components.toggleCartDrawer(true);
-        }, 100);
       }
     });
   });
@@ -414,4 +397,79 @@ function bindTestimonialsCarousel() {
       clearInterval(autoPlay);
     }
   }, 7000);
+}
+
+// Hero Image Slider Controls
+function bindHeroSlider() {
+  const track = document.getElementById('hero-slider-track');
+  const dotsContainer = document.getElementById('hero-slider-dots');
+  const prevBtn = document.getElementById('hero-slide-prev');
+  const nextBtn = document.getElementById('hero-slide-next');
+  if (!track) return;
+
+  const slides = Array.from(track.children);
+  const dots = dotsContainer ? Array.from(dotsContainer.children) : [];
+  let currentIndex = 0;
+  let slideInterval;
+
+  const showSlide = (index) => {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+    currentIndex = index;
+  };
+
+  const nextSlide = () => {
+    const nextIndex = (currentIndex + 1) % slides.length;
+    showSlide(nextIndex);
+  };
+
+  const prevSlide = () => {
+    const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+    showSlide(prevIndex);
+  };
+
+  const startAutoPlay = () => {
+    stopAutoPlay();
+    slideInterval = setInterval(nextSlide, 3500); // Auto-slide every 3.5 seconds
+  };
+
+  const stopAutoPlay = () => {
+    if (slideInterval) clearInterval(slideInterval);
+  };
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      prevSlide();
+      startAutoPlay();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      nextSlide();
+      startAutoPlay();
+    });
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showSlide(i);
+      startAutoPlay();
+    });
+  });
+
+  const sliderContainer = track.closest('.hero-slider-container');
+  if (sliderContainer) {
+    sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+    sliderContainer.addEventListener('mouseleave', startAutoPlay);
+  }
+
+  startAutoPlay();
 }

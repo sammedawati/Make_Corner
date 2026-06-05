@@ -10,7 +10,6 @@ import renderShop from './views/shop.js';
 import renderContact from './views/contact.js';
 import renderAuth from './views/auth.js';
 import renderAdmin from './views/admin.js';
-import renderCheckout from './views/checkout.js'; // Imported checkout page
 
 // Route Handlers Container
 const routes = {
@@ -19,9 +18,10 @@ const routes = {
   '#shop': renderShop,
   '#contact': renderContact,
   '#auth': renderAuth,
-  '#admin': renderAdmin,
-  '#checkout': renderCheckout // Registered checkout view
+  '#admin': renderAdmin
 };
+
+const LAST_ROUTE_KEY = 'mc_last_route';
 
 // Register a view renderer for a path
 export function registerRoute(path, renderFunction) {
@@ -30,7 +30,7 @@ export function registerRoute(path, renderFunction) {
 
 // Router main driver
 export async function navigate() {
-  const { path, query } = parseHash();
+  const { path, query, fullRoute } = parseHash();
   const viewport = document.getElementById('app-viewport');
   
   if (!viewport) return;
@@ -49,36 +49,37 @@ export async function navigate() {
     }
   }
 
-  // Cart Guard for Checkout Page
-  if (path === '#checkout') {
-    const cart = State.getCart();
-    if (cart.length === 0) {
-      Components.showToast('Your cart is empty. Add sprayers to checkout.', 'warning');
-      window.location.hash = '#shop';
-      Components.hideLoader();
-      return;
-    }
+
+
+  // Toggle body class for styling admin panel layout
+  if (path === '#admin') {
+    document.body.classList.add('admin-mode');
+  } else {
+    document.body.classList.remove('admin-mode');
   }
 
   // Fallback to home if route not found
-  const renderer = routes[path] || routes['#home'];
+  const routeExists = Boolean(routes[path]);
+  const activePath = routeExists ? path : '#home';
+  const renderer = routes[activePath];
   
   try {
     // Render the view
     if (renderer) {
       await renderer(viewport, query);
+      rememberRoute(routeExists ? fullRoute : '#home');
     } else {
       viewport.innerHTML = `<div class="container section-padding text-center"><h2>Page Not Found</h2><p>The page you are looking for does not exist.</p><a href="#home" class="btn btn-primary mt-4">Return Home</a></div>`;
     }
     
     // Update Header Navigation Active State
-    updateActiveNavLink(path);
+    updateActiveNavLink(activePath);
     
     // Smooth scroll to top on routing
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
     // SEO optimization: update page titles
-    updateSEO(path);
+    updateSEO(activePath);
   } catch (error) {
     console.error("Routing error:", error);
     viewport.innerHTML = `<div class="container section-padding text-center"><h2>Execution Error</h2><p>Failed to render this section. Check console logs.</p></div>`;
@@ -92,9 +93,11 @@ export async function navigate() {
 
 // Helper to parse URL hashes and queries (e.g. #shop?category=Power Sprayers)
 function parseHash() {
-  const hash = window.location.hash || '#home';
+  const hash = getInitialRoute();
   const [pathWithHash, queryString] = hash.split('?');
-  const path = pathWithHash;
+  const routeExists = Boolean(routes[pathWithHash]);
+  const path = routeExists ? pathWithHash : '#home';
+  const fullRoute = routeExists ? hash : '#home';
   const query = {};
 
   if (queryString) {
@@ -106,7 +109,37 @@ function parseHash() {
     });
   }
 
-  return { path, query };
+  return { path, query, fullRoute };
+}
+
+function getInitialRoute() {
+  if (window.location.hash && window.location.hash !== '#') {
+    return window.location.hash;
+  }
+
+  const pathRoute = `#${window.location.pathname.replace(/^\/+|\/+$/g, '')}`;
+  if (routes[pathRoute]) {
+    return pathRoute;
+  }
+
+  try {
+    const savedRoute = localStorage.getItem(LAST_ROUTE_KEY);
+    if (savedRoute) return savedRoute;
+  } catch (error) {
+    console.warn('Unable to restore last route:', error);
+  }
+
+  return '#home';
+}
+
+function rememberRoute(route) {
+  if (!route || route === '#logout') return;
+
+  try {
+    localStorage.setItem(LAST_ROUTE_KEY, route);
+  } catch (error) {
+    console.warn('Unable to save current route:', error);
+  }
 }
 
 // Update Active Link highlight in header
@@ -123,7 +156,7 @@ function updateActiveNavLink(currentPath) {
     '#about': 'nav-link-about',
     '#contact': 'nav-link-contact',
     '#auth': 'nav-link-auth',
-    '#admin': 'nav-link-admin'
+    '#admin': 'floating-admin-btn'
   };
 
   const activeLinkId = linkIdMap[currentPath];
@@ -134,7 +167,7 @@ function updateActiveNavLink(currentPath) {
 
   // Update dynamic Authentication Link in Navbar based on login state
   const authLink = document.getElementById('nav-link-auth');
-  const adminLink = document.getElementById('nav-link-admin');
+  const adminLink = document.getElementById('floating-admin-btn');
   const currentUser = State.getCurrentUser();
 
   if (authLink) {
@@ -182,10 +215,6 @@ function updateSEO(path) {
     '#admin': {
       title: 'System Admin Panel | Make Corner',
       description: 'Management portal for Make Corner catalog pricing, product inventory, and customer sales order ledgers.'
-    },
-    '#checkout': {
-      title: 'Secure Checkout | Make Corner Storefront',
-      description: 'Complete your agricultural sprayer order. Enter shipping address and choose secure payment methods.'
     }
   };
 
@@ -213,6 +242,21 @@ export function initRouter() {
     }
   });
 
+  restoreRouteHash();
+
   // Run navigation immediately for current landing hash
   navigate();
+}
+
+function restoreRouteHash() {
+  if (window.location.hash && window.location.hash !== '#') return;
+
+  try {
+    const savedRoute = localStorage.getItem(LAST_ROUTE_KEY);
+    if (savedRoute && savedRoute !== '#home' && savedRoute !== '#logout') {
+      window.location.hash = savedRoute;
+    }
+  } catch (error) {
+    console.warn('Unable to restore saved route hash:', error);
+  }
 }
