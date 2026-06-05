@@ -180,12 +180,9 @@ function updateActiveNavLink(currentPath) {
     }
   }
 
+  // Admin button is always visible
   if (adminLink) {
-    if (currentUser && currentUser.role === 'admin') {
-      adminLink.classList.remove('hidden');
-    } else {
-      adminLink.classList.add('hidden');
-    }
+    adminLink.classList.remove('hidden');
   }
 }
 

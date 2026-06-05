@@ -59,7 +59,6 @@ export default async function renderHome(container, query) {
               <!-- Slide 4: HDPE Pipes -->
               <div class="hero-slide">
                 <img src="/images/hdpe_pipe.avif" alt="HDPE Agricultural Pipes">
-                <div class="hero-slide-label">HDPE Pipes</div>
                 <div class="hero-badge">
                   <span class="hero-badge-number">DN20</span>
                   <span class="hero-badge-text">to DN315 Diameter Range</span>
@@ -68,7 +67,6 @@ export default async function renderHome(container, query) {
               <!-- Slide 5: MDPE Pipes -->
               <div class="hero-slide">
                 <img src="/images/mdpe_pipe.png" alt="MDPE Utility Pipe">
-                <div class="hero-slide-label">MDPE Pipes</div>
                 <div class="hero-badge">
                   <span class="hero-badge-number">12</span>
                   <span class="hero-badge-text">Bar Max Working Pressure</span>
@@ -77,7 +75,6 @@ export default async function renderHome(container, query) {
               <!-- Slide 6: Fabricated Fittings -->
               <div class="hero-slide">
                 <img src="/images/fabricated_pipe.png" alt="Fabricated HDPE Fittings">
-                <div class="hero-slide-label">Fabricated Fittings</div>
                 <div class="hero-badge">
                   <span class="hero-badge-number">ISO</span>
                   <span class="hero-badge-text">Certified Fabricated Fittings</span>
@@ -86,7 +83,6 @@ export default async function renderHome(container, query) {
               <!-- Slide 7: Modular HDPE -->
               <div class="hero-slide">
                 <img src="/images/moduled_hdpe.png" alt="Moulded HDPE Pipe Fittings">
-                <div class="hero-slide-label">Moulded Fittings</div>
                 <div class="hero-badge">
                   <span class="hero-badge-number">100%</span>
                   <span class="hero-badge-text">Virgin HDPE Grade Material</span>
