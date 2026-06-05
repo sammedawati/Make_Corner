@@ -274,7 +274,6 @@ function renderFeaturedProductCard(product) {
         ${imgTag}
       </div>
       <div class="product-card-content">
-        <span class="product-card-category">${product.category}</span>
         <h3 class="product-card-title">${product.name}</h3>
         <p class="product-card-desc-snippet" title="${product.description}">${product.description}</p>
         <div class="product-card-specs">
