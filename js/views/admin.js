@@ -403,9 +403,9 @@ export default async function renderAdmin(container, query) {
             }
 
             // Assign matching generated category image
-            let imagePath = "images/power_sprayer.png";
-            if (category === "Knapsack Sprayers") imagePath = "images/knapsack_sprayer.png";
-            if (category === "Battery Spray Pumps") imagePath = "images/battery_sprayer.png";
+            let imagePath = "/images/power_sprayer.png";
+            if (category === "Knapsack Sprayers") imagePath = "/images/knapsack_sprayer.png";
+            if (category === "Battery Spray Pumps") imagePath = "/images/battery_sprayer.png";
 
             const newProduct = {
               id: "prod-" + Date.now(),

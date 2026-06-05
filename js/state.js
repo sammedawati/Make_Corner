@@ -10,7 +10,7 @@ const INITIAL_PRODUCTS = [
     category: "Power Sprayers",
     price: 28500.00,
     stock: 12,
-    image: "images/power_sprayer.png",
+    image: "/images/power_sprayer.png",
     specs: {
       "Flow Rate": "30 L/min",
       "Working Pressure": "20-45 kgf/cm²",
@@ -27,7 +27,7 @@ const INITIAL_PRODUCTS = [
     category: "Power Sprayers",
     price: 21500.00,
     stock: 15,
-    image: "images/power_sprayer.png",
+    image: "/images/power_sprayer.png",
     specs: {
       "Flow Rate": "22 L/min",
       "Working Pressure": "15-35 kgf/cm²",
@@ -44,7 +44,7 @@ const INITIAL_PRODUCTS = [
     category: "Power Sprayers",
     price: 24800.00,
     stock: 8,
-    image: "images/power_sprayer.png",
+    image: "/images/power_sprayer.png",
     specs: {
       "Flow Rate": "26 L/min",
       "Working Pressure": "15-40 kgf/cm²",
@@ -61,7 +61,7 @@ const INITIAL_PRODUCTS = [
     category: "Power Sprayers",
     price: 34200.00,
     stock: 5,
-    image: "images/power_sprayer.png",
+    image: "/images/power_sprayer.png",
     specs: {
       "Flow Rate": "36 L/min",
       "Working Pressure": "20-50 kgf/cm²",
@@ -78,7 +78,7 @@ const INITIAL_PRODUCTS = [
     category: "Power Sprayers",
     price: 44500.00,
     stock: 4,
-    image: "images/power_sprayer.png",
+    image: "/images/power_sprayer.png",
     specs: {
       "Flow Rate": "45 L/min",
       "Working Pressure": "20-50 kgf/cm²",
@@ -95,7 +95,7 @@ const INITIAL_PRODUCTS = [
     category: "Power Sprayers",
     price: 56000.00,
     stock: 3,
-    image: "images/power_sprayer.png",
+    image: "/images/power_sprayer.png",
     specs: {
       "Flow Rate": "50 L/min",
       "Working Pressure": "20-60 kgf/cm²",
@@ -112,7 +112,7 @@ const INITIAL_PRODUCTS = [
     category: "Knapsack Sprayers",
     price: 14500.00,
     stock: 20,
-    image: "images/knapsack_sprayer.png",
+    image: "/images/knapsack_sprayer.png",
     specs: {
       "Engine Type": "2-Stroke Petrol Engine",
       "Tank Capacity": "20 Liters",
@@ -129,7 +129,7 @@ const INITIAL_PRODUCTS = [
     category: "Knapsack Sprayers",
     price: 17200.00,
     stock: 14,
-    image: "images/knapsack_sprayer.png",
+    image: "/images/knapsack_sprayer.png",
     specs: {
       "Engine Type": "4-Stroke Low Emission",
       "Tank Capacity": "25 Liters",
@@ -146,7 +146,7 @@ const INITIAL_PRODUCTS = [
     category: "Knapsack Sprayers",
     price: 3200.00,
     stock: 45,
-    image: "images/knapsack_sprayer.png",
+    image: "/images/knapsack_sprayer.png",
     specs: {
       "Operation": "Manual Lever Pump",
       "Tank Capacity": "16 Liters",
@@ -163,7 +163,7 @@ const INITIAL_PRODUCTS = [
     category: "Battery Spray Pumps",
     price: 7800.00,
     stock: 30,
-    image: "images/battery_sprayer.png",
+    image: "/images/battery_sprayer.png",
     specs: {
       "Battery Type": "12V 8Ah Sealed Lead-Acid",
       "Tank Capacity": "16 Liters",
@@ -180,7 +180,7 @@ const INITIAL_PRODUCTS = [
     category: "HDPE Pipes",
     price: 118.00,
     stock: 500,
-    image: "images/HDPE_Pipe.svg.avif",
+    image: "/images/hdpe_pipe.avif",
     specs: {
       "Material": "PE100 high-density polyethylene",
       "Diameter Range": "32-110 mm",
@@ -197,7 +197,7 @@ const INITIAL_PRODUCTS = [
     category: "MDPE Pipes",
     price: 96.00,
     stock: 420,
-    image: "images/MDPE_pipe.png",
+    image: "/images/mdpe_pipe.png",
     specs: {
       "Material": "Medium-density polyethylene",
       "Diameter Range": "20-90 mm",
@@ -214,7 +214,7 @@ const INITIAL_PRODUCTS = [
     category: "Electrofusion Fittings",
     price: 850.00,
     stock: 140,
-    image: "images/cupler.png",
+    image: "/images/cupler.png",
     specs: {
       "Fitting Type": "Coupler",
       "Size Range": "63-400 mm",
@@ -231,7 +231,7 @@ const INITIAL_PRODUCTS = [
     category: "Electrofusion Fittings",
     price: 1250.00,
     stock: 85,
-    image: "images/ELECTROFUSION.png",
+    image: "/images/electrofusion.png",
     specs: {
       "Fitting Type": "Reducing tee",
       "Size Range": "63-315 mm",
@@ -248,7 +248,7 @@ const INITIAL_PRODUCTS = [
     category: "Electrofusion Fittings",
     price: 1180.00,
     stock: 90,
-    image: "images/Equal tee.png",
+    image: "/images/equal_tee.png",
     specs: {
       "Fitting Type": "Equal tee",
       "Size Range": "63-315 mm",
@@ -265,7 +265,7 @@ const INITIAL_PRODUCTS = [
     category: "Electrofusion Fittings",
     price: 520.00,
     stock: 130,
-    image: "images/End cap.png",
+    image: "/images/end_cap.png",
     specs: {
       "Fitting Type": "End cap",
       "Size Range": "63-315 mm",
@@ -282,7 +282,7 @@ const INITIAL_PRODUCTS = [
     category: "Electrofusion Fittings",
     price: 780.00,
     stock: 110,
-    image: "images/REDUCERS.png",
+    image: "/images/reducers.png",
     specs: {
       "Fitting Type": "Reducer",
       "Size Range": "63-315 mm",
@@ -299,7 +299,7 @@ const INITIAL_PRODUCTS = [
     category: "Electrofusion Fittings",
     price: 980.00,
     stock: 95,
-    image: "images/ELBOW.png",
+    image: "/images/elbow.png",
     specs: {
       "Fitting Type": "Elbow",
       "Size Range": "All",
@@ -316,7 +316,7 @@ const INITIAL_PRODUCTS = [
   //   category: "Electrofusion Fittings",
   //   price: 720.00,
   //   stock: 100,
-  //   image: "images/elbow_45.svg",
+  //   image: "/images/elbow_45.svg",
   //   specs: {
   //     "Fitting Type": "45 degree elbow",
   //     "Size Range": "63-200 mm",
@@ -333,7 +333,7 @@ const INITIAL_PRODUCTS = [
   //   category: "Electrofusion Fittings",
   //   price: 690.00,
   //   stock: 100,
-  //   image: "images/elbow_225.svg",
+  //   image: "/images/elbow_225.svg",
   //   specs: {
   //     "Fitting Type": "22.5 degree elbow",
   //     "Size Range": "63-200 mm",
@@ -350,7 +350,7 @@ const INITIAL_PRODUCTS = [
     category: "Electrofusion Fittings",
     price: 940.00,
     stock: 80,
-    image: "images/Saddle.png",
+    image: "/images/saddle.png",
     specs: {
       "Fitting Type": "Saddle",
       "Size Range": "63-315 mm",
@@ -367,7 +367,7 @@ const INITIAL_PRODUCTS = [
     category: "Moulded Fittings",
     price: 420.00,
     stock: 220,
-    image: "images/Moduled HDPE.png",
+    image: "/images/moduled_hdpe.png",
     specs: {
       "Fitting Types": "Elbow, tee, reducer, end cap",
       "Material": "Injection moulded HDPE",
@@ -384,7 +384,7 @@ const INITIAL_PRODUCTS = [
     category: "Fabricated Fittings",
     price: 1650.00,
     stock: 75,
-    image: "images/Fabricated Pipe.png",
+    image: "/images/fabricated_pipe.png",
     specs: {
       "Fitting Types": "Long bend, tee, manifold, custom spool",
       "Build": "Workshop fabricated HDPE",
