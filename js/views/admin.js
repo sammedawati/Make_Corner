@@ -12,10 +12,23 @@ export default async function renderAdmin(container, query) {
 
   const drawAdminStructure = () => {
     container.innerHTML = `
+      <!-- Admin Mobile Header -->
+      <div class="admin-mobile-header">
+        <button id="admin-menu-toggle" class="admin-menu-toggle" aria-label="Toggle Navigation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <span class="admin-mobile-brand">Make Corner Admin</span>
+        <a href="#home" class="admin-mobile-back-store-btn" aria-label="Back to Store">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </a>
+      </div>
+
+      <div class="admin-sidebar-backdrop" id="admin-sidebar-backdrop"></div>
+
       <section class="section-padding">
         <div class="container admin-layout">
           <!-- Sidebar Navigation -->
-          <aside class="admin-sidebar glass-card">
+          <aside class="admin-sidebar glass-card" id="admin-sidebar">
             <div class="admin-user-profile">
               <div class="admin-avatar">
                 ${currentUser ? currentUser.username.charAt(0).toUpperCase() : 'A'}
@@ -199,7 +212,7 @@ export default async function renderAdmin(container, query) {
                 
                 return `
                   <tr data-id="${p.id}">
-                    <td>
+                    <td data-label="Product Name">
                       <div class="admin-table-product-cell">
                         <div class="admin-table-product-icon">${imgThumb}</div>
                         <div>
@@ -208,14 +221,14 @@ export default async function renderAdmin(container, query) {
                         </div>
                       </div>
                     </td>
-                    <td>${p.category}</td>
-                    <td>
+                    <td data-label="Category">${p.category}</td>
+                    <td data-label="Price (₹)">
                       <input type="number" class="form-input admin-price-adjust-field" data-id="${p.id}" value="${p.price}" style="padding: 6px 10px; font-size: 0.85rem; width: 110px; text-align: right; font-weight: 700;" step="1">
                     </td>
-                    <td>
+                    <td data-label="Stock Units">
                       <input type="number" class="form-input admin-stock-adjust-field" data-id="${p.id}" value="${p.stock}" style="padding: 6px 10px; font-size: 0.85rem; width: 70px; text-align: center;">
                     </td>
-                    <td>
+                    <td data-label="Actions">
                       <div class="admin-actions-cell">
                         <button class="btn-action btn-save-price" data-id="${p.id}" title="Save Changes" style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary);">
                           ${Icons.check}
@@ -461,10 +474,10 @@ export default async function renderAdmin(container, query) {
             <tbody>
               ${users.map(u => `
                 <tr>
-                  <td><strong>${u.username}</strong></td>
-                  <td>${u.email}</td>
-                  <td>${u.joinedDate || '2026-01-01'}</td>
-                  <td>
+                  <td data-label="Username"><strong>${u.username}</strong></td>
+                  <td data-label="Email Address">${u.email}</td>
+                  <td data-label="Registered Date">${u.joinedDate || '2026-01-01'}</td>
+                  <td data-label="Account Role">
                     <span style="background: ${u.role === 'admin' ? 'rgba(212,175,55,0.15)' : 'rgba(0,0,0,0.05)'}; 
                                  color: ${u.role === 'admin' ? 'var(--color-accent)' : 'var(--color-text-muted)'};
                                  padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
@@ -513,11 +526,11 @@ export default async function renderAdmin(container, query) {
             <tbody>
               ${events.map(ev => `
                 <tr>
-                  <td><strong>${ev.title}</strong></td>
-                  <td>${ev.date}</td>
-                  <td>${ev.location}</td>
-                  <td style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${ev.description}</td>
-                  <td>
+                  <td data-label="Event Title"><strong>${ev.title}</strong></td>
+                  <td data-label="Scheduled Date">${ev.date}</td>
+                  <td data-label="Location / Outlet">${ev.location}</td>
+                  <td data-label="Short Description" style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${ev.description}</td>
+                  <td data-label="Actions">
                     <div class="admin-actions-cell">
                       <button class="btn-action btn-action-delete btn-delete-event" data-id="${ev.id}" title="Remove Event">
                         ${Icons.trash}
@@ -642,23 +655,23 @@ export default async function renderAdmin(container, query) {
             <tbody>
               ${enquiries.map(e => `
                 <tr data-id="${e.id}">
-                  <td><strong>${e.name}</strong></td>
-                  <td>
+                  <td data-label="Customer Name"><strong>${e.name}</strong></td>
+                  <td data-label="Contact Info">
                     <div style="font-size: 0.85rem; color: var(--color-text);">
                       <div>${e.email}</div>
                       <div style="color: var(--color-text-muted);">${e.phone}</div>
                     </div>
                   </td>
-                  <td>
+                  <td data-label="Interest">
                     <span style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">
                       ${e.interest}
                     </span>
                   </td>
-                  <td style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                  <td data-label="Message Snippet" style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
                     ${e.message}
                   </td>
-                  <td>${e.date}</td>
-                  <td>
+                  <td data-label="Date">${e.date}</td>
+                  <td data-label="Actions">
                     <div class="admin-actions-cell">
                       <button class="btn-action btn-view-enquiry" data-id="${e.id}" title="View Full Message" style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary);">
                         ${Icons.info}
@@ -736,6 +749,24 @@ export default async function renderAdmin(container, query) {
 
   // Bind sidebar button tab clicks
   const bindSidebarEvents = () => {
+    const menuToggle = document.getElementById('admin-menu-toggle');
+    const sidebar = document.getElementById('admin-sidebar');
+    const backdrop = document.getElementById('admin-sidebar-backdrop');
+
+    const toggleMenu = (open) => {
+      if (sidebar && backdrop) {
+        sidebar.classList.toggle('open', open);
+        backdrop.classList.toggle('open', open);
+      }
+    };
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => toggleMenu(true));
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => toggleMenu(false));
+    }
+
     container.querySelectorAll('.admin-nav-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const tab = e.currentTarget.dataset.tab;
@@ -745,6 +776,7 @@ export default async function renderAdmin(container, query) {
         container.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
         e.currentTarget.classList.add('active');
 
+        toggleMenu(false);
         drawActiveTab();
       });
     });
@@ -752,6 +784,7 @@ export default async function renderAdmin(container, query) {
     const logoutBtn = document.getElementById('admin-sidebar-logout-btn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
+        toggleMenu(false);
         State.logoutUser();
         Components.showToast('Signed out of admin portal.', 'info');
         window.location.hash = '#home';
