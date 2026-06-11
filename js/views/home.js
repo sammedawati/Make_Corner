@@ -3,6 +3,7 @@
    ========================================================================== */
 
 import { State } from '../state.js';
+import { t } from '../i18n.js';
 import { Components, Icons, getCategoryIcon } from '../components.js';
 
 export default async function renderHome(container, query) {
@@ -17,16 +18,16 @@ export default async function renderHome(container, query) {
       <div class="hero-bg"></div>
       <div class="container hero-grid">
         <div class="hero-content">
-          <div class="hero-subtitle">World Class Spraying Systems</div>
+          <div class="hero-subtitle">${t('hero_subtitle')}</div>
           <h1 class="hero-title">
-            Precision Agricultural <span>Spraying Solutions</span>
+            ${t('hero_title')}
           </h1>
           <p class="hero-desc">
-            Make Corner specializes in supplying industrial-grade power sprayers, knapsack sprayers, and battery spray pumps. Enhance your crop protection, reduce wastage, and secure optimal yields with Lu Shyoung equipment.
+            ${t('hero_desc')}
           </p>
           <div class="hero-actions">
-            <a href="#shop" class="btn btn-primary">Explore Products</a>
-            <a href="#about" class="btn btn-secondary">Learn Our Story</a>
+            <a href="#shop" class="btn btn-primary">${t('btn_explore')}</a>
+            <a href="#about" class="btn btn-secondary">${t('btn_learn_more')}</a>
           </div>
         </div>
         <div class="hero-image-wrapper">
@@ -116,19 +117,19 @@ export default async function renderHome(container, query) {
       <div class="container stats-grid">
         <div class="stat-card">
           <div class="stat-number">10k+</div>
-          <div class="stat-label">Farms Empowered</div>
+          <div class="stat-label">${t('stat_farms')}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">100%</div>
-          <div class="stat-label">Genuine Parts Warranty</div>
+          <div class="stat-label">${t('stat_parts')}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">24/7</div>
-          <div class="stat-label">Expert Technical Support</div>
+          <div class="stat-label">${t('stat_support')}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">0.3s</div>
-          <div class="stat-label">Instant Shut-off Valves</div>
+          <div class="stat-label">${t('stat_valves')}</div>
         </div>
       </div>
     </section>
@@ -137,9 +138,9 @@ export default async function renderHome(container, query) {
     <section class="section-padding">
       <div class="container">
         <div class="section-title-wrapper">
-          <span class="section-subtitle">Premium Selections</span>
-          <h2 class="section-title">Featured Spraying Solutions</h2>
-          <p class="section-desc">Handpicked agricultural sprayers optimized for reliability, spray range, and pressure consistency.</p>
+          <span class="section-subtitle">${t('nav_products')}</span>
+          <h2 class="section-title">${t('nav_products')}</h2>
+          <p class="section-desc">${t('why_desc')}</p>
         </div>
 
         <div class="featured-grid">
@@ -147,7 +148,7 @@ export default async function renderHome(container, query) {
         </div>
 
         <div class="featured-actions">
-          <a href="#shop" class="btn btn-secondary">View Complete Shop Catalog</a>
+          <a href="#shop" class="btn btn-secondary">${t('nav_all_products')}</a>
         </div>
       </div>
     </section>
@@ -156,9 +157,9 @@ export default async function renderHome(container, query) {
     <section class="section-padding" style="background: var(--color-surface); border-top: var(--glass-border);">
       <div class="container">
         <div class="section-title-wrapper">
-          <span class="section-subtitle">Engineered for Farms</span>
-          <h2 class="section-title">Why Professionals Trust Lu Shyoung</h2>
-          <p class="section-desc">Our spraying equipment features unmatched craftsmanship and technical enhancements to make pest and disease management simpler.</p>
+          <span class="section-subtitle">${t('why_subtitle')}</span>
+          <h2 class="section-title">${t('why_title')}</h2>
+          <p class="section-desc">${t('why_desc')}</p>
         </div>
 
         <div class="features-grid">
@@ -166,24 +167,24 @@ export default async function renderHome(container, query) {
             <div class="feature-icon-wrapper">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
-            <h3 class="feature-title">High Pressure Plungers</h3>
-            <p class="feature-desc">Fitted with ceramic-coated cylinders that resist corrosion and wear from heavy chemical applications, maintaining output pressure year after year.</p>
+            <h3 class="feature-title">${t('why_feat1_title')}</h3>
+            <p class="feature-desc">${t('why_feat1_desc')}</p>
           </div>
 
           <div class="feature-card glass-card">
             <div class="feature-icon-wrapper">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             </div>
-            <h3 class="feature-title">Consistent Flow Distribution</h3>
-            <p class="feature-desc">Engineered relief valves prevent pressure surges, ensuring spray droplets remain at a uniform micron size for maximum leaf coverage.</p>
+            <h3 class="feature-title">${t('why_feat2_title')}</h3>
+            <p class="feature-desc">${t('why_feat2_desc')}</p>
           </div>
 
           <div class="feature-card glass-card">
             <div class="feature-icon-wrapper">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
             </div>
-            <h3 class="feature-title">Low-Emission Motors</h3>
-            <p class="feature-desc">Our power and knapsack engine variations exceed environmental emission targets, reducing fuel consumption while keeping pump flow high.</p>
+            <h3 class="feature-title">${t('why_feat3_title')}</h3>
+            <p class="feature-desc">${t('why_feat3_desc')}</p>
           </div>
         </div>
       </div>
@@ -193,9 +194,9 @@ export default async function renderHome(container, query) {
     <section class="section-padding testimonials-section">
       <div class="container">
         <div class="section-title-wrapper">
-          <span class="section-subtitle">Success Stories</span>
-          <h2 class="section-title">Trusted By Growers</h2>
-          <p class="section-desc">Hear how agricultural operations improved efficiency using our spraying units.</p>
+          <span class="section-subtitle">${t('test_subtitle')}</span>
+          <h2 class="section-title">${t('test_title')}</h2>
+          <p class="section-desc">${t('test_desc')}</p>
         </div>
 
         <div class="testimonials-carousel-wrapper">
@@ -275,14 +276,14 @@ function renderFeaturedProductCard(product) {
       </div>
       <div class="product-card-content">
         <h3 class="product-card-title">${product.name}</h3>
-        <p class="product-card-desc-snippet" title="${product.description}">${product.description}</p>
+        <p class="product-card-desc-snippet" title="${t(product.id + '_desc')}">${t(product.id + '_desc')}</p>
         <div class="product-card-specs">
-          ${specsSnippet.map(([key, val]) => `<span class="spec-tag">${key}: ${val}</span>`).join('')}
+          ${specsSnippet.map(([key, val]) => `<span class="spec-tag">${t(key)}: ${val}</span>`).join('')}
         </div>
 
         <div class="product-card-footer">
-          <a href="#contact?product=${encodeURIComponent(product.name)}" class="btn btn-primary btn-card-add-primary" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; padding: 8px 16px; font-size: 0.8rem; width: 100%;">
-            Get Quote
+          <a href="#contact?product=${encodeURIComponent(product.name)}" class="btn btn-primary btn-card-add-primary" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; padding: 8px 16px; font-size: 0.85rem; width: 100%;">
+            ${t('btn_get_quote')}
           </a>
         </div>
       </div>
@@ -303,7 +304,7 @@ function bindFeaturedProductEvents(container) {
       if (product) {
         const categoryIcon = getCategoryIcon(product.category);
         const specsRows = Object.entries(product.specs)
-          .map(([key, val]) => `<tr><td>${key}</td><td>${val}</td></tr>`).join('');
+          .map(([key, val]) => `<tr><td>${t(key)}</td><td>${val}</td></tr>`).join('');
           
         const detailImg = product.image 
           ? `<img src="${product.image}" alt="${product.name}">`
@@ -315,23 +316,23 @@ function bindFeaturedProductEvents(container) {
               ${detailImg}
             </div>
             <div class="product-detail-info">
-              <span class="product-detail-category">${product.category}</span>
+              <span class="product-detail-category">${t(product.category)}</span>
               <h2 class="product-detail-title">${product.name}</h2>
-              <p class="product-detail-desc">${product.description}</p>
+              <p class="product-detail-desc">${t(product.id + '_desc')}</p>
               
-              <h4 style="margin-top: 12px; color: var(--color-primary);">Technical Specifications</h4>
+              <h4 style="margin-top: 12px; color: var(--color-primary);">${t('Technical Specifications')}</h4>
               <table class="product-detail-specs-table">
                 <tbody>
                   ${specsRows}
-                  <tr><td>Stock Status</td><td>${product.stock > 0 ? `${product.stock} units available` : `<span style="color: var(--color-error)">Out of Stock</span>`}</td></tr>
+                  <tr><td>${t('Stock Status')}</td><td>${product.stock > 0 ? `${product.stock} ${t('units available')}` : `<span style="color: var(--color-error)">${t('Out of Stock')}</span>`}</td></tr>
                 </tbody>
               </table>
 
               <div class="product-detail-actions">
                 <a href="#contact?product=${encodeURIComponent(product.name)}" class="btn btn-primary" onclick="Components.hideModal()" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
-                  Inquire About Product
+                  ${t('btn_get_quote')}
                 </a>
-                <button class="btn btn-secondary" onclick="Components.hideModal()">Close</button>
+                <button class="btn btn-secondary" onclick="Components.hideModal()">${t('btn_close')}</button>
               </div>
             </div>
           </div>

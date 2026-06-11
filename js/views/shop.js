@@ -4,16 +4,13 @@
 
 import { State } from '../state.js';
 import { Components, Icons, getCategoryIcon } from '../components.js';
+import { t } from '../i18n.js';
 
 let activeCategory = 'All';
 let currentSort = 'price-low'; // Options: price-low, price-high, name-az, name-za
 
 const getSortLabel = (sortVal) => {
-  if (sortVal === 'price-low') return 'Price: Low to High';
-  if (sortVal === 'price-high') return 'Price: High to Low';
-  if (sortVal === 'name-az') return 'Alphabetical: A-Z';
-  if (sortVal === 'name-za') return 'Alphabetical: Z-A';
-  return 'Sort Products';
+  return t(sortVal);
 };
 
 export default async function renderShop(container, query) {
@@ -52,16 +49,16 @@ export default async function renderShop(container, query) {
           <div class="shop-hero">
             <aside class="shop-filters-sidebar">
               <div class="glass-card">
-                <h3 class="filter-group-title">Equipment Categories</h3>
+                <h3 class="filter-group-title">${t('shop_categories_title')}</h3>
                 <div class="category-select-wrapper" id="category-filter-dropdown">
                   <button class="category-filter-select" id="category-filter-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
-                    <span>${activeCategory} (${getCount(activeCategory)})</span>
+                    <span>${t(activeCategory)} (${getCount(activeCategory)})</span>
                     <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
                   </button>
                   <div class="category-options-list" id="category-filter-options" role="listbox">
                     ${categories.map(cat => `
                       <button class="category-option ${activeCategory === cat ? 'active' : ''}" type="button" role="option" aria-selected="${activeCategory === cat ? 'true' : 'false'}" data-category="${cat}">
-                        <span>${cat}</span>
+                        <span>${t(cat)}</span>
                         <span class="category-count">${getCount(cat)}</span>
                       </button>
                     `).join('')}
@@ -71,15 +68,15 @@ export default async function renderShop(container, query) {
             </aside>
 
             <div class="section-title-wrapper shop-title-wrapper">
-              <span class="section-subtitle">Store Catalog</span>
-              <h1 class="section-title">Professional Spraying Solutions</h1>
-              <p class="section-desc">Find premium high pressure, motorized backpack, and battery spray pumps with factory-backed support.</p>
+              <span class="section-subtitle">${t('shop_subtitle')}</span>
+              <h1 class="section-title">${t('shop_title')}</h1>
+              <p class="section-desc">${t('shop_desc')}</p>
             </div>
 
             <!-- Repositioned Sort Dropdown -->
             <div class="shop-hero-sort">
               <div class="glass-card">
-                <h3 class="filter-group-title">Sort Products</h3>
+                <h3 class="filter-group-title">${t('shop_sort_title')}</h3>
                 <div class="category-select-wrapper" id="sort-filter-dropdown">
                   <button class="category-filter-select" id="sort-filter-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
                     <span>${getSortLabel(currentSort)}</span>
@@ -87,16 +84,16 @@ export default async function renderShop(container, query) {
                   </button>
                   <div class="category-options-list" id="sort-filter-options" role="listbox">
                     <button class="category-option ${currentSort === 'price-low' ? 'active' : ''}" type="button" role="option" aria-selected="${currentSort === 'price-low' ? 'true' : 'false'}" data-value="price-low">
-                      Price: Low to High
+                      ${t('price-low')}
                     </button>
                     <button class="category-option ${currentSort === 'price-high' ? 'active' : ''}" type="button" role="option" aria-selected="${currentSort === 'price-high' ? 'true' : 'false'}" data-value="price-high">
-                      Price: High to Low
+                      ${t('price-high')}
                     </button>
                     <button class="category-option ${currentSort === 'name-az' ? 'active' : ''}" type="button" role="option" aria-selected="${currentSort === 'name-az' ? 'true' : 'false'}" data-value="name-az">
-                      Alphabetical: A-Z
+                      ${t('name-az')}
                     </button>
                     <button class="category-option ${currentSort === 'name-za' ? 'active' : ''}" type="button" role="option" aria-selected="${currentSort === 'name-za' ? 'true' : 'false'}" data-value="name-za">
-                      Alphabetical: Z-A
+                      ${t('name-za')}
                     </button>
                   </div>
                 </div>
@@ -149,8 +146,8 @@ export default async function renderShop(container, query) {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/>
           </svg>
-          <h3>No Equipment Found</h3>
-          <p>We couldn't find any sprayers matching your criteria. Try adjusting your filters or search keywords.</p>
+          <h3>${t('shop_no_results_title')}</h3>
+          <p>${t('shop_no_results_desc')}</p>
         </div>
       `;
       return;
@@ -262,14 +259,14 @@ export default async function renderShop(container, query) {
         </div>
         <div class="product-card-content">
           <h3 class="product-card-title">${product.name}</h3>
-          <p class="product-card-desc-snippet" title="${product.description}">${product.description}</p>
+          <p class="product-card-desc-snippet" title="${t(product.id + '_desc')}">${t(product.id + '_desc')}</p>
           <div class="product-card-specs">
-            ${specsSnippet.map(([key, val]) => `<span class="spec-tag">${key}: ${val}</span>`).join('')}
+            ${specsSnippet.map(([key, val]) => `<span class="spec-tag">${t(key)}: ${val}</span>`).join('')}
           </div>
 
           <div class="product-card-footer">
             <a href="#contact?product=${encodeURIComponent(product.name)}" class="btn btn-primary btn-card-add-primary" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; padding: 8px 16px; font-size: 0.8rem; width: 100%;">
-              Get Quote
+              ${t('btn_get_quote')}
             </a>
           </div>
         </div>
@@ -290,7 +287,7 @@ export default async function renderShop(container, query) {
         if (product) {
           const categoryIcon = getCategoryIcon(product.category);
           const specsRows = Object.entries(product.specs)
-            .map(([key, val]) => `<tr><td>${key}</td><td>${val}</td></tr>`).join('');
+            .map(([key, val]) => `<tr><td>${t(key)}</td><td>${val}</td></tr>`).join('');
             
           const detailImg = product.image 
             ? `<img src="${product.image}" alt="${product.name}">`
@@ -302,23 +299,23 @@ export default async function renderShop(container, query) {
                 ${detailImg}
               </div>
               <div class="product-detail-info">
-                <span class="product-detail-category">${product.category}</span>
+                <span class="product-detail-category">${t(product.category)}</span>
                 <h2 class="product-detail-title">${product.name}</h2>
-                <p class="product-detail-desc">${product.description}</p>
+                <p class="product-detail-desc">${t(product.id + '_desc')}</p>
                 
-                <h4 style="margin-top: 12px; color: var(--color-primary);">Technical Specifications</h4>
+                <h4 style="margin-top: 12px; color: var(--color-primary);">${t('Technical Specifications')}</h4>
                 <table class="product-detail-specs-table">
                   <tbody>
                     ${specsRows}
-                    <tr><td>Stock Status</td><td>${product.stock > 0 ? `${product.stock} units available` : `<span style="color: var(--color-error)">Out of Stock</span>`}</td></tr>
+                    <tr><td>${t('Stock Status')}</td><td>${product.stock > 0 ? `${product.stock} ${t('units available')}` : `<span style="color: var(--color-error)">${t('Out of Stock')}</span>`}</td></tr>
                   </tbody>
                 </table>
 
                 <div class="product-detail-actions">
                   <a href="#contact?product=${encodeURIComponent(product.name)}" class="btn btn-primary" onclick="Components.hideModal()" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
-                    Inquire About Product
+                    ${t('btn_get_quote')}
                   </a>
-                  <button class="btn btn-secondary" onclick="Components.hideModal()">Close</button>
+                  <button class="btn btn-secondary" onclick="Components.hideModal()">${t('btn_close')}</button>
                 </div>
               </div>
             </div>

@@ -4,6 +4,7 @@
 
 import { Components, Icons } from '../components.js';
 import { State } from '../state.js';
+import { t } from '../i18n.js';
 
 export default async function renderContact(container, query) {
   let initialMessage = '';
@@ -11,7 +12,7 @@ export default async function renderContact(container, query) {
 
   if (query && query.product) {
     const prodName = decodeURIComponent(query.product);
-    initialMessage = `Hello Make Corner team, I would like to receive detailed information and a pricing quote for the ${prodName} sprayer model. Thank you.`;
+    initialMessage = t('contact_initial_msg').replace('{product}', prodName);
     
     const products = State.getProducts();
     const product = products.find(p => p.name.toLowerCase() === prodName.toLowerCase() || p.id.toLowerCase() === prodName.toLowerCase());
@@ -25,53 +26,53 @@ export default async function renderContact(container, query) {
     <section class="section-padding">
       <div class="container">
         <div class="section-title-wrapper">
-          <span class="section-subtitle">Get In Touch</span>
-          <h1 class="section-title">We're Here to Help</h1>
-          <p class="section-desc">Connect with agricultural spraying experts. Get pricing quotes, technical advice, or service scheduling.</p>
+          <span class="section-subtitle">${t('contact_subtitle')}</span>
+          <h1 class="section-title">${t('contact_title')}</h1>
+          <p class="section-desc">${t('contact_desc')}</p>
         </div>
 
         <div class="contact-layout">
           <!-- Form Section -->
           <div class="glass-card contact-form-wrapper">
-            <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 12px;">Send an Inquiry</h3>
+            <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 12px;">${t('contact_form_title')}</h3>
             <form id="contact-inquiry-form" class="contact-form" novalidate>
               <div class="form-grid-2">
                 <div class="form-group">
-                  <label for="contact-name" class="form-label">Full Name *</label>
+                  <label for="contact-name" class="form-label">${t('contact_name')}</label>
                   <input type="text" id="contact-name" class="form-input" placeholder="e.g. John Doe" required>
-                  <div class="form-error-msg" id="err-name" style="display: none;">Name is required (minimum 3 characters).</div>
+                  <div class="form-error-msg" id="err-name" style="display: none;">${t('contact_err_name')}</div>
                 </div>
                 <div class="form-group">
-                  <label for="contact-email" class="form-label">Email Address *</label>
+                  <label for="contact-email" class="form-label">${t('contact_email')}</label>
                   <input type="email" id="contact-email" class="form-input" placeholder="e.g. john@farm.com" required>
-                  <div class="form-error-msg" id="err-email" style="display: none;">Please enter a valid email address.</div>
+                  <div class="form-error-msg" id="err-email" style="display: none;">${t('contact_err_email')}</div>
                 </div>
               </div>
 
               <div class="form-grid-2" style="margin-top: 16px;">
                 <div class="form-group">
-                  <label for="contact-phone" class="form-label">Phone Number</label>
+                  <label for="contact-phone" class="form-label">${t('contact_phone')}</label>
                   <input type="tel" id="contact-phone" class="form-input" placeholder="e.g. +1 (555) 019-2834">
                 </div>
                 <div class="form-group">
-                  <label for="contact-interest" class="form-label">Equipment of Interest</label>
+                  <label for="contact-interest" class="form-label">${t('contact_interest')}</label>
                   <select id="contact-interest" class="form-select" aria-label="Select equipment of interest">
-                    <option value="general" ${interestVal === 'general' ? 'selected' : ''}>General Support / Parts</option>
-                    <option value="power" ${interestVal === 'power' ? 'selected' : ''}>Lu Shyoung Power Sprayers</option>
-                    <option value="knapsack" ${interestVal === 'knapsack' ? 'selected' : ''}>Knapsack Sprayers (Manual / Power)</option>
-                    <option value="battery" ${interestVal === 'battery' ? 'selected' : ''}>Battery Spray Pumps</option>
+                    <option value="general" ${interestVal === 'general' ? 'selected' : ''}>${t('contact_interest_general')}</option>
+                    <option value="power" ${interestVal === 'power' ? 'selected' : ''}>${t('contact_interest_power')}</option>
+                    <option value="knapsack" ${interestVal === 'knapsack' ? 'selected' : ''}>${t('contact_interest_knapsack')}</option>
+                    <option value="battery" ${interestVal === 'battery' ? 'selected' : ''}>${t('contact_interest_battery')}</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group" style="margin-top: 16px;">
-                <label for="contact-message" class="form-label">Your Message *</label>
+                <label for="contact-message" class="form-label">${t('contact_message')}</label>
                 <textarea id="contact-message" class="form-textarea" rows="5" placeholder="Specify model questions or custom sprayer setups..." required>${initialMessage}</textarea>
-                <div class="form-error-msg" id="err-message" style="display: none;">Message is required (minimum 10 characters).</div>
+                <div class="form-error-msg" id="err-message" style="display: none;">${t('contact_err_message')}</div>
               </div>
 
               <button type="submit" class="btn btn-primary" style="margin-top: 24px; align-self: flex-start;">
-                Submit Message
+                ${t('btn_submit')}
               </button>
             </form>
           </div>
@@ -83,9 +84,9 @@ export default async function renderContact(container, query) {
                 ${Icons.phone}
               </div>
               <div class="contact-card-info">
-                <h4>Call Our Service Hub</h4>
+                <h4>${t('contact_card_phone_title')}</h4>
                 <p>+1 (555) 309-8080</p>
-                <p style="font-size: 0.85rem;">Mon - Sat: 8:00 AM - 6:00 PM</p>
+                <p style="font-size: 0.85rem;">${t('contact_card_phone_hours')}</p>
               </div>
             </div>
 
@@ -94,9 +95,9 @@ export default async function renderContact(container, query) {
                 ${Icons.mail}
               </div>
               <div class="contact-card-info">
-                <h4>Email Support Desk</h4>
-                <p>support@makecorner.com</p>
-                <p style="font-size: 0.85rem;">We reply within 12 business hours</p>
+                <h4>${t('contact_card_email_title')}</h4>
+                <p>support@mechcorner.com</p>
+                <p style="font-size: 0.85rem;">${t('contact_card_email_hours')}</p>
               </div>
             </div>
 
@@ -105,9 +106,9 @@ export default async function renderContact(container, query) {
                 ${Icons.map}
               </div>
               <div class="contact-card-info">
-                <h4>Main Headquarters</h4>
+                <h4>${t('contact_card_map_title')}</h4>
                 <p>102 Orchard Lane, Agri Industrial Hub, TX 75001</p>
-                <p style="font-size: 0.85rem;">Visit us for live flow tests and parts matching</p>
+                <p style="font-size: 0.85rem;">${t('contact_card_map_desc')}</p>
               </div>
             </div>
 
@@ -124,7 +125,7 @@ export default async function renderContact(container, query) {
 
                 <!-- Info Box Overlay -->
                 <div class="map-popup" id="map-tooltip-popup" style="display: none;">
-                  <div class="map-popup-title">Make Corner HQ</div>
+                  <div class="map-popup-title">Mech Corner HQ</div>
                   <div>102 Orchard Lane</div>
                   <div style="font-size: 0.75rem; color: var(--color-accent); font-weight: 600; margin-top: 4px;">Click to Hide</div>
                 </div>
@@ -208,10 +209,10 @@ function bindContactFormEvents(container) {
       State.saveEnquiry(newEnquiry);
 
       // Success toast
-      Components.showToast(`Thank you, ${nameInput.value}! Your message has been sent to our tech team.`, 'success');
+      Components.showToast(t('contact_toast_success').replace('{name}', nameInput.value), 'success');
       form.reset();
     } else {
-      Components.showToast('Please correct form validation errors.', 'error');
+      Components.showToast(t('contact_toast_error'), 'error');
     }
   });
 }

@@ -254,7 +254,7 @@ img {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 48px;
+  gap: 44px;
 }
 
 .nav-link {
@@ -457,6 +457,31 @@ img {
   gap: 16px;
 }
 
+.lang-switcher-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.lang-select-dropdown {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-surface);
+  border: var(--glass-border);
+  color: var(--color-primary);
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.lang-select-dropdown:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-primary-light);
+}
+
 .header-action-btn {
   width: 44px;
   height: 44px;
@@ -615,13 +640,13 @@ img {
 }
 
 .section-padding {
-  padding: 80px 0;
+  padding: 48px 0;
 }
 
 /* Reduce top spacing for the first section under the main viewport */
 .app-viewport > section.section-padding:first-of-type,
 .app-viewport > div > section.section-padding:first-of-type {
-  padding-top: 40px;
+  padding-top: 20px;
 }
 
 .container {
@@ -859,6 +884,11 @@ img {
 .hero-dot.active {
   background: var(--color-primary);
   transform: scale(1.25);
+}
+
+.hero-image-container {
+  height: 380px;
+  width: 100%;
 }
 
 .hero-image-fallback {
@@ -2500,14 +2530,18 @@ body.admin-mode .container {
 }
 
 #admin-add-product-btn,
-#admin-add-event-btn {
+#admin-add-event-btn,
+.admin-back-dashboard-btn {
   padding: 8px 16px;
   font-size: 0.85rem;
   border-radius: 6px;
+  height: 38px;
+  min-width: 0;
 }
 
 #admin-add-product-btn svg,
-#admin-add-event-btn svg {
+#admin-add-event-btn svg,
+.admin-back-dashboard-btn svg {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
@@ -3243,17 +3277,21 @@ body.admin-mode .container {
 
 /* Tablet View (Max 1024px) */
 @media (max-width: 1024px) {
+  .section-padding {
+    padding: 48px 0;
+  }
+
   .hero-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
 
-  .hero-image-wrapper {
-    order: -1;
-  }
-
   .hero-slider-container {
     height: 320px;
+  }
+
+  .hero-image-container {
+    height: auto;
   }
 
   .hero-slide-nav {
@@ -3548,6 +3586,14 @@ body.admin-mode .container {
 
 /* Mobile View (Max 768px) */
 @media (max-width: 768px) {
+  .section-padding {
+    padding: 32px 0;
+  }
+
+  .main-footer {
+    padding: 40px 0 0 0;
+  }
+
   html {
     font-size: 15px;
   }

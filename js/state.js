@@ -399,7 +399,7 @@ const INITIAL_PRODUCTS = [
 
 const INITIAL_USERS = [
   {
-    email: "admin@makecorner.com",
+    email: "admin@mechcorner.com",
     password: "admin123",
     username: "Admin Manager",
     role: "admin",
@@ -485,6 +485,7 @@ let events = getStorage("mc_events", INITIAL_EVENTS);
 let enquiries = getStorage("mc_enquiries", INITIAL_ENQUIRIES);
 let currentUser = getStorage("mc_current_user", null);
 let cart = getStorage("mc_cart", []);
+let currentLang = localStorage.getItem("mc_lang") || "en";
 
 const seedSyncProductIds = [
   "prod-hdpe-agri-pipe",
@@ -658,6 +659,14 @@ export const State = {
   deleteEnquiry(id) {
     enquiries = enquiries.filter(e => e.id !== id);
     setStorage("mc_enquiries", enquiries);
+  },
+  getLanguage() {
+    return currentLang;
+  },
+  setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("mc_lang", lang);
+    notifyListeners();
   }
 };
 

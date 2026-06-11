@@ -3,6 +3,7 @@
    ========================================================================== */
 
 import { State } from './state.js';
+import { t } from './i18n.js';
 import { Components } from './components.js';
 import renderHome from './views/home.js';
 import renderAbout from './views/about.js';
@@ -23,9 +24,82 @@ const routes = {
 
 const LAST_ROUTE_KEY = 'mc_last_route';
 
+// Route History Stack for Custom Back Navigation
+const routeHistory = [];
+
+window.goBack = function() {
+  if (routeHistory.length > 1) {
+    routeHistory.pop(); // Remove current route from history
+    const prev = routeHistory.pop(); // Get the previous route
+    window.location.hash = prev;
+  } else {
+    window.location.hash = '#home';
+  }
+};
+
 // Register a view renderer for a path
 export function registerRoute(path, renderFunction) {
   routes[path] = renderFunction;
+}
+
+export function translateStaticUI() {
+  // Translate navigation menu
+  const navHome = document.getElementById('nav-link-home');
+  const navAbout = document.getElementById('nav-link-about');
+  const navShop = document.getElementById('nav-link-shop');
+  const navContact = document.getElementById('nav-link-contact');
+  const navAllProducts = document.getElementById('nav-link-all-products');
+  
+  if (navHome) navHome.textContent = t('nav_home');
+  if (navAbout) navAbout.textContent = t('nav_about');
+  if (navShop) navShop.textContent = t('nav_products');
+  if (navContact) navContact.textContent = t('nav_contact');
+  if (navAllProducts) navAllProducts.textContent = t('nav_all_products');
+
+  // Translate footer
+  const footerDesc = document.getElementById('footer-desc');
+  const footerTitleSitemap = document.getElementById('footer-title-sitemap');
+  const footerTitleProducts = document.getElementById('footer-title-products');
+  const footerTitleNewsletter = document.getElementById('footer-title-newsletter');
+  const footerNewsletterText = document.getElementById('footer-newsletter-text');
+  const footerEmailInput = document.getElementById('newsletter-email');
+  const footerCopyright = document.getElementById('footer-copyright');
+  const footerLinkPrivacy = document.getElementById('footer-link-privacy');
+  const footerLinkTerms = document.getElementById('footer-link-terms');
+  
+  const footerLinkHome = document.getElementById('footer-link-home');
+  const footerLinkShop = document.getElementById('footer-link-shop');
+  const footerLinkAbout = document.getElementById('footer-link-about');
+  const footerLinkContact = document.getElementById('footer-link-contact');
+  
+  const footerLinkCat1 = document.getElementById('footer-link-cat1');
+  const footerLinkCat2 = document.getElementById('footer-link-cat2');
+  const footerLinkCat3 = document.getElementById('footer-link-cat3');
+
+  if (footerDesc) footerDesc.textContent = t('footer_desc');
+  if (footerTitleSitemap) footerTitleSitemap.textContent = t('footer_title_sitemap');
+  if (footerTitleProducts) footerTitleProducts.textContent = t('footer_title_products');
+  if (footerTitleNewsletter) footerTitleNewsletter.textContent = t('footer_title_newsletter');
+  if (footerNewsletterText) footerNewsletterText.textContent = t('footer_newsletter_text');
+  if (footerEmailInput) footerEmailInput.placeholder = t('footer_newsletter_placeholder');
+  if (footerCopyright) footerCopyright.innerHTML = t('footer_copyright');
+  if (footerLinkPrivacy) footerLinkPrivacy.textContent = t('footer_privacy');
+  if (footerLinkTerms) footerLinkTerms.textContent = t('footer_terms');
+  
+  if (footerLinkHome) footerLinkHome.textContent = t('nav_home');
+  if (footerLinkShop) footerLinkShop.textContent = t('nav_products');
+  if (footerLinkAbout) footerLinkAbout.textContent = t('nav_about');
+  if (footerLinkContact) footerLinkContact.textContent = t('nav_contact');
+  
+  if (footerLinkCat1) footerLinkCat1.textContent = t('contact_interest_power');
+  if (footerLinkCat2) footerLinkCat2.textContent = t('contact_interest_knapsack');
+  if (footerLinkCat3) footerLinkCat3.textContent = t('contact_interest_battery');
+
+  // Sync the language dropdown selection
+  const langSelect = document.getElementById('lang-select');
+  if (langSelect) {
+    langSelect.value = State.getLanguage();
+  }
 }
 
 // Router main driver
@@ -34,6 +108,12 @@ export async function navigate() {
   const viewport = document.getElementById('app-viewport');
   
   if (!viewport) return;
+
+  // Track navigation history
+  const currentHash = window.location.hash || '#home';
+  if (routeHistory.length === 0 || routeHistory[routeHistory.length - 1] !== currentHash) {
+    routeHistory.push(currentHash);
+  }
 
   // Show loading indicator briefly for premium transition feel
   Components.showLoader();
@@ -68,12 +148,30 @@ export async function navigate() {
     if (renderer) {
       await renderer(viewport, query);
       rememberRoute(routeExists ? fullRoute : '#home');
+
+      // Auto-insert Back Button for all pages except Home and Admin
+      if (activePath !== '#home' && activePath !== '#admin') {
+        const backBtnWrapper = document.createElement('div');
+        backBtnWrapper.className = 'container';
+        backBtnWrapper.style.marginTop = '24px';
+        backBtnWrapper.style.marginBottom = '-16px';
+        backBtnWrapper.innerHTML = `
+          <button onclick="window.goBack()" class="btn btn-secondary back-button" style="padding: 8px 16px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; border-radius: var(--border-radius-sm);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            ${t('btn_back')}
+          </button>
+        `;
+        viewport.insertBefore(backBtnWrapper, viewport.firstChild);
+      }
     } else {
       viewport.innerHTML = `<div class="container section-padding text-center"><h2>Page Not Found</h2><p>The page you are looking for does not exist.</p><a href="#home" class="btn btn-primary mt-4">Return Home</a></div>`;
     }
     
     // Update Header Navigation Active State
     updateActiveNavLink(activePath);
+
+    // Translate navigation and footer
+    translateStaticUI();
     
     // Smooth scroll to top on routing
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -190,28 +288,28 @@ function updateActiveNavLink(currentPath) {
 function updateSEO(path) {
   const seoDetails = {
     '#home': {
-      title: 'Make Corner | Premium Agricultural Spraying Solutions',
-      description: 'Discover agricultural sprayers from Make Corner: power sprayers, knapsack sprayers, and battery spray pumps.'
+      title: 'Mech Corner | Premium Agricultural Spraying Solutions',
+      description: 'Discover agricultural sprayers from Mech Corner: power sprayers, knapsack sprayers, and battery spray pumps.'
     },
     '#shop': {
-      title: 'Shop Agricultural Sprayers & Equipment | Make Corner',
+      title: 'Shop Agricultural Sprayers & Equipment | Mech Corner',
       description: 'Explore the Lu Shyoung LS series. High quality power sprayers, manual knapsack sprayers, and 12V battery pumps.'
     },
     '#about': {
-      title: 'Our Story & Team | Make Corner Agricultural Equipment',
-      description: 'Learn about Make Corner, our mission to support local farmers, and our line of high efficiency spray equipment.'
+      title: 'Our Story & Team | Mech Corner Agricultural Equipment',
+      description: 'Learn about Mech Corner, our mission to support local farmers, and our line of high efficiency spray equipment.'
     },
     '#contact': {
-      title: 'Contact Us | Make Corner Customer Support',
+      title: 'Contact Us | Mech Corner Customer Support',
       description: 'Get in touch with agricultural spraying experts. Access our address, simulated map, and quick support forms.'
     },
     '#auth': {
-      title: 'Sign In / Sign Up | Make Corner Storefront',
-      description: 'Access your Make Corner user portal to manage purchases and browse catalog products.'
+      title: 'Sign In / Sign Up | Mech Corner Storefront',
+      description: 'Access your Mech Corner user portal to manage purchases and browse catalog products.'
     },
     '#admin': {
-      title: 'System Admin Panel | Make Corner',
-      description: 'Management portal for Make Corner catalog pricing, product inventory, and customer sales order ledgers.'
+      title: 'System Admin Panel | Mech Corner',
+      description: 'Management portal for Mech Corner catalog pricing, product inventory, and customer sales order ledgers.'
     }
   };
 
@@ -238,6 +336,16 @@ export function initRouter() {
       window.location.hash = '#home';
     }
   });
+
+  // Language switcher change handler
+  const langSelect = document.getElementById('lang-select');
+  if (langSelect) {
+    langSelect.value = State.getLanguage();
+    langSelect.addEventListener('change', (e) => {
+      State.setLanguage(e.target.value);
+      navigate();
+    });
+  }
 
   restoreRouteHash();
 

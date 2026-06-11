@@ -4,12 +4,12 @@
 
 import { State } from '../state.js';
 import { Components, Icons, getCategoryIcon } from '../components.js';
+import { t } from '../i18n.js';
 
 let activeAdminTab = 'dashboard'; // Options: dashboard, products, orders, customers, events, enquiries
 
 export default async function renderAdmin(container, query) {
   const currentUser = State.getCurrentUser();
-
   const drawAdminStructure = () => {
     container.innerHTML = `
       <!-- Admin Mobile Header -->
@@ -17,7 +17,7 @@ export default async function renderAdmin(container, query) {
         <button id="admin-menu-toggle" class="admin-menu-toggle" aria-label="Toggle Navigation">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
-        <span class="admin-mobile-brand">Make Corner Admin</span>
+        <span class="admin-mobile-brand">${t('admin_brand_mobile')}</span>
         <a href="#home" class="admin-mobile-back-store-btn" aria-label="Back to Store">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </a>
@@ -35,36 +35,43 @@ export default async function renderAdmin(container, query) {
               </div>
               <div>
                 <div class="admin-username">${currentUser ? currentUser.username : 'Administrator'}</div>
-                <span class="admin-role-badge">System Admin</span>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                  <span class="admin-role-badge">${t('admin_role')}</span>
+                  <select id="admin-lang-select" style="background: #fff; border: 1px solid rgba(0,0,0,0.12); border-radius: 4px; font-size: 0.7rem; padding: 1px 3px; cursor: pointer; color: var(--color-text); font-weight: 500;">
+                    <option value="en" ${State.getLanguage() === 'en' ? 'selected' : ''}>EN</option>
+                    <option value="mr" ${State.getLanguage() === 'mr' ? 'selected' : ''}>मराठी</option>
+                    <option value="hi" ${State.getLanguage() === 'hi' ? 'selected' : ''}>हिंदी</option>
+                  </select>
+                </div>
               </div>
             </div>
 
             <nav class="admin-nav">
               <button class="admin-nav-btn ${activeAdminTab === 'dashboard' ? 'active' : ''}" data-tab="dashboard">
-                ${Icons.dashboard} Overview
+                ${Icons.dashboard} ${t('admin_tab_overview')}
               </button>
               <button class="admin-nav-btn ${activeAdminTab === 'products' ? 'active' : ''}" data-tab="products">
-                ${Icons.powerSprayer} Products Manager
+                ${Icons.powerSprayer} ${t('admin_tab_products')}
               </button>
               <button class="admin-nav-btn ${activeAdminTab === 'customers' ? 'active' : ''}" data-tab="customers">
-                ${Icons.users} Customers List
+                ${Icons.users} ${t('admin_tab_customers')}
               </button>
               <button class="admin-nav-btn ${activeAdminTab === 'events' ? 'active' : ''}" data-tab="events">
-                ${Icons.calendar} Marketing Events
+                ${Icons.calendar} ${t('admin_tab_events')}
               </button>
               <button class="admin-nav-btn ${activeAdminTab === 'enquiries' ? 'active' : ''}" data-tab="enquiries">
-                ${Icons.mail} Customer Enquiries
+                ${Icons.mail} ${t('admin_tab_enquiries')}
               </button>
             </nav>
 
             <div class="admin-sidebar-footer">
               <a href="#home" class="admin-footer-btn back-store-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-btn-icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <span>View Store</span>
+                <span>${t('admin_view_store')}</span>
               </a>
               <button class="admin-footer-btn logout-btn" id="admin-sidebar-logout-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-btn-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                <span>Sign Out</span>
+                <span>${t('admin_sign_out')}</span>
               </button>
             </div>
           </aside>
@@ -92,6 +99,22 @@ export default async function renderAdmin(container, query) {
     if (activeAdminTab === 'enquiries') drawEnquiriesTab(mainViewport);
   };
 
+  const bindBackToDashboardEvent = (viewport) => {
+    const btn = viewport.querySelector('.admin-back-dashboard-btn');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        activeAdminTab = 'dashboard';
+        // Highlight overview tab in sidebar
+        const sidebarBtn = container.querySelector('.admin-nav-btn[data-tab="dashboard"]');
+        if (sidebarBtn) {
+          container.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+          sidebarBtn.classList.add('active');
+        }
+        drawActiveTab();
+      });
+    }
+  };
+
   // 1. Dashboard Overview Tab
   const drawDashboardTab = (viewport) => {
     const productsCount = State.getProducts().length;
@@ -101,11 +124,7 @@ export default async function renderAdmin(container, query) {
 
     viewport.innerHTML = `
       <div class="admin-view-header">
-        <h2 class="admin-view-title">Overview Dashboard</h2>
-        <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-          Back to Store
-        </a>
+        <h2 class="admin-view-title">${t('admin_dash_title')}</h2>
       </div>
 
       <!-- Metrics Cards -->
@@ -113,29 +132,29 @@ export default async function renderAdmin(container, query) {
         <div class="admin-stat-card glass-card">
           <div class="admin-stat-icon">${Icons.powerSprayer}</div>
           <div class="admin-stat-details">
-            <h4>Total Models</h4>
-            <div class="admin-stat-value">${productsCount} Sprayers</div>
+            <h4>${t('admin_dash_models')}</h4>
+            <div class="admin-stat-value">${productsCount} ${t('admin_suffix_sprayers')}</div>
           </div>
         </div>
         <div class="admin-stat-card glass-card">
           <div class="admin-stat-icon">${Icons.users}</div>
           <div class="admin-stat-details">
-            <h4>Registered Farmers</h4>
-            <div class="admin-stat-value">${usersCount} Accounts</div>
+            <h4>${t('admin_dash_farmers')}</h4>
+            <div class="admin-stat-value">${usersCount} ${t('admin_suffix_accounts')}</div>
           </div>
         </div>
         <div class="admin-stat-card glass-card">
           <div class="admin-stat-icon">${Icons.calendar}</div>
           <div class="admin-stat-details">
-            <h4>Scheduled Events</h4>
-            <div class="admin-stat-value">${eventsCount} Scheduled</div>
+            <h4>${t('admin_dash_events')}</h4>
+            <div class="admin-stat-value">${eventsCount} ${t('admin_suffix_scheduled')}</div>
           </div>
         </div>
         <div class="admin-stat-card glass-card">
           <div class="admin-stat-icon">${Icons.mail}</div>
           <div class="admin-stat-details">
-            <h4>Active Enquiries</h4>
-            <div class="admin-stat-value">${enquiriesCount} Inquiries</div>
+            <h4>${t('admin_dash_enquiries')}</h4>
+            <div class="admin-stat-value">${enquiriesCount} ${t('admin_suffix_inquiries')}</div>
           </div>
         </div>
       </div>
@@ -148,46 +167,46 @@ export default async function renderAdmin(container, query) {
 
     viewport.innerHTML = `
       <div class="admin-view-header">
-        <h2 class="admin-view-title">Products Inventory Manager</h2>
+        <h2 class="admin-view-title">${t('admin_prod_title')}</h2>
         <div class="admin-view-header-actions" style="display: flex; gap: 8px; align-items: center;">
-          <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+          <button class="btn btn-secondary admin-back-dashboard-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-            Back to Store
-          </a>
+            ${t('btn_back')}
+          </button>
           <button class="btn btn-primary" id="admin-add-product-btn">
-            ${Icons.plus} Add New Sprayer
+            ${Icons.plus} ${t('admin_prod_add')}
           </button>
         </div>
       </div>
 
       <!-- Bulk Price Adjustment Card -->
       <div class="glass-card" style="margin-bottom: 24px;">
-        <h3 style="font-size: 1.1rem; color: var(--color-primary); margin-bottom: 16px;">Bulk Price Adjustment</h3>
+        <h3 style="font-size: 1.1rem; color: var(--color-primary); margin-bottom: 16px;">${t('admin_prod_bulk_title')}</h3>
         <div class="admin-bulk-adjust-row">
           <div class="form-group" style="margin: 0; min-width: 200px;">
-            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">Filter by Category</label>
+            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">${t('admin_prod_bulk_filter_cat')}</label>
             <select id="bulk-adjust-category" class="form-select" style="height: 38px; padding: 0 12px; font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.08); border-radius: 6px; width: 100%; background: #fff;">
-              <option value="all">All Categories</option>
-              <option value="Power Sprayers">Power Sprayers</option>
-              <option value="Knapsack Sprayers">Knapsack Sprayers</option>
-              <option value="Battery Spray Pumps">Battery Spray Pumps</option>
+              <option value="all">${t('All')}</option>
+              <option value="Power Sprayers">${t('Power Sprayers')}</option>
+              <option value="Knapsack Sprayers">${t('Knapsack Sprayers')}</option>
+              <option value="Battery Spray Pumps">${t('Battery Spray Pumps')}</option>
             </select>
           </div>
           <div class="form-group" style="margin: 0; min-width: 180px;">
-            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">Adjustment Type</label>
+            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">${t('admin_prod_bulk_adjust_type')}</label>
             <select id="bulk-adjust-type" class="form-select" style="height: 38px; padding: 0 12px; font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.08); border-radius: 6px; width: 100%; background: #fff;">
-              <option value="percent-inc">Increase by Percentage (%)</option>
-              <option value="percent-dec">Decrease by Percentage (%)</option>
-              <option value="fixed-inc">Increase by Fixed Amount (₹)</option>
-              <option value="fixed-dec">Decrease by Fixed Amount (₹)</option>
+              <option value="percent-inc">${t('percent-inc')}</option>
+              <option value="percent-dec">${t('percent-dec')}</option>
+              <option value="fixed-inc">${t('fixed-inc')}</option>
+              <option value="fixed-dec">${t('fixed-dec')}</option>
             </select>
           </div>
           <div class="form-group" style="margin: 0; max-width: 120px;">
-            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">Value</label>
+            <label class="form-label" style="font-size: 0.8rem; margin-bottom: 6px; display: block;">${t('admin_prod_bulk_val')}</label>
             <input type="number" id="bulk-adjust-value" class="form-input" placeholder="e.g. 5" style="height: 38px; padding: 0 12px; font-size: 0.85rem; border: 1px solid rgba(0,0,0,0.08); border-radius: 6px; width: 100%; background: #fff;" min="0">
           </div>
           <button class="btn btn-primary" id="btn-apply-bulk-price" style="height: 38px; padding: 0 20px; font-size: 0.85rem; border-radius: 8px;">
-            Apply Adjustments
+            ${t('admin_prod_bulk_apply')}
           </button>
         </div>
       </div>
@@ -197,11 +216,11 @@ export default async function renderAdmin(container, query) {
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th style="width: 160px;">Price Adjust (₹)</th>
-                <th>Stock Units</th>
-                <th>Actions</th>
+                <th>${t('admin_prod_th_name')}</th>
+                <th>${t('admin_prod_th_cat')}</th>
+                <th style="width: 160px;">${t('admin_prod_th_price')}</th>
+                <th>${t('admin_prod_th_stock')}</th>
+                <th>${t('admin_prod_th_actions')}</th>
               </tr>
             </thead>
             <tbody id="admin-products-table-body">
@@ -212,23 +231,23 @@ export default async function renderAdmin(container, query) {
                 
                 return `
                   <tr data-id="${p.id}">
-                    <td data-label="Product Name">
+                    <td data-label="${t('admin_prod_th_name')}">
                       <div class="admin-table-product-cell">
                         <div class="admin-table-product-icon">${imgThumb}</div>
                         <div>
                           <strong>${p.name}</strong>
-                          ${p.badge ? `<span style="background: var(--color-accent); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 20px; margin-left: 6px;">${p.badge}</span>` : ''}
+                          ${p.badge ? `<span style="background: var(--color-accent); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 20px; margin-left: 6px;">${t(p.badge) || p.badge}</span>` : ''}
                         </div>
                       </div>
                     </td>
-                    <td data-label="Category">${p.category}</td>
-                    <td data-label="Price (₹)">
+                    <td data-label="${t('admin_prod_th_cat')}">${t(p.category) || p.category}</td>
+                    <td data-label="${t('admin_prod_th_price')}">
                       <input type="number" class="form-input admin-price-adjust-field" data-id="${p.id}" value="${p.price}" style="padding: 6px 10px; font-size: 0.85rem; width: 110px; text-align: right; font-weight: 700;" step="1">
                     </td>
-                    <td data-label="Stock Units">
+                    <td data-label="${t('admin_prod_th_stock')}">
                       <input type="number" class="form-input admin-stock-adjust-field" data-id="${p.id}" value="${p.stock}" style="padding: 6px 10px; font-size: 0.85rem; width: 70px; text-align: center;">
                     </td>
-                    <td data-label="Actions">
+                    <td data-label="${t('admin_prod_th_actions')}">
                       <div class="admin-actions-cell">
                         <button class="btn-action btn-save-price" data-id="${p.id}" title="Save Changes" style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary);">
                           ${Icons.check}
@@ -259,11 +278,11 @@ export default async function renderAdmin(container, query) {
         const newStock = parseInt(stockInput.value);
 
         if (isNaN(newPrice) || newPrice <= 0) {
-          Components.showToast('Invalid price amount entered.', 'error');
+          Components.showToast(t('admin_prod_toast_price_err'), 'error');
           return;
         }
         if (isNaN(newStock) || newStock < 0) {
-          Components.showToast('Invalid stock units entered.', 'error');
+          Components.showToast(t('admin_prod_toast_stock_err'), 'error');
           return;
         }
 
@@ -272,7 +291,7 @@ export default async function renderAdmin(container, query) {
           product.price = newPrice;
           product.stock = newStock;
           State.saveProduct(product);
-          Components.showToast(`Updated ${product.name} (Price: ₹${newPrice.toLocaleString('en-IN')}, Stock: ${newStock}).`, 'success');
+          Components.showToast(t('admin_prod_toast_update_success').replace('{name}', product.name).replace('{price}', newPrice.toLocaleString('en-IN')).replace('{stock}', newStock), 'success');
         }
       });
     });
@@ -286,7 +305,7 @@ export default async function renderAdmin(container, query) {
         const valInput = parseFloat(viewport.querySelector('#bulk-adjust-value').value);
 
         if (isNaN(valInput) || valInput <= 0) {
-          Components.showToast('Please enter a valid positive adjustment value.', 'error');
+          Components.showToast(t('admin_prod_toast_bulk_val_err'), 'error');
           return;
         }
 
@@ -320,10 +339,10 @@ export default async function renderAdmin(container, query) {
         });
 
         if (affectedCount > 0) {
-          Components.showToast(`Successfully adjusted price for ${affectedCount} product(s).`, 'success');
+          Components.showToast(t('admin_prod_toast_bulk_success').replace('{count}', affectedCount), 'success');
           drawProductsTab(viewport); // Refresh table
         } else {
-          Components.showToast('No matching products found to update.', 'info');
+          Components.showToast(t('admin_prod_toast_bulk_no_match'), 'info');
         }
       });
     }
@@ -333,9 +352,9 @@ export default async function renderAdmin(container, query) {
       btn.addEventListener('click', (e) => {
         const id = e.currentTarget.dataset.id;
         const product = State.getProductById(id);
-        if (product && confirm(`Are you sure you want to remove ${product.name} from the catalog?`)) {
+        if (product && confirm(t('admin_prod_confirm_delete').replace('{name}', product.name))) {
           State.deleteProduct(id);
-          Components.showToast(`${product.name} removed from store catalog.`, 'info');
+          Components.showToast(t('admin_prod_toast_delete_success').replace('{name}', product.name), 'info');
           drawProductsTab(viewport);
         }
       });
@@ -346,52 +365,52 @@ export default async function renderAdmin(container, query) {
     if (addProductBtn) {
       addProductBtn.addEventListener('click', () => {
         Components.showModal(`
-          <h2 style="font-family: var(--font-headings); color: var(--color-primary); margin-bottom: 24px;">Add New Spraying Equipment</h2>
+          <h2 style="font-family: var(--font-headings); color: var(--color-primary); margin-bottom: 24px;">${t('admin_modal_add_title')}</h2>
           <form id="admin-create-product-form" class="auth-form">
             <div class="form-grid-2">
               <div class="form-group">
-                <label class="form-label">Sprayer Name *</label>
+                <label class="form-label">${t('admin_modal_add_name')}</label>
                 <input type="text" id="new-prod-name" class="form-input" placeholder="e.g. Lu Shyoung LS-30N" required>
               </div>
               <div class="form-group">
-                <label class="form-label">Category *</label>
+                <label class="form-label">${t('admin_modal_add_cat')}</label>
                 <select id="new-prod-category" class="form-select">
-                  <option value="Power Sprayers">Power Sprayers</option>
-                  <option value="Knapsack Sprayers">Knapsack Sprayers</option>
-                  <option value="Battery Spray Pumps">Battery Spray Pumps</option>
+                  <option value="Power Sprayers">${t('Power Sprayers')}</option>
+                  <option value="Knapsack Sprayers">${t('Knapsack Sprayers')}</option>
+                  <option value="Battery Spray Pumps">${t('Battery Spray Pumps')}</option>
                 </select>
               </div>
             </div>
 
             <div class="form-grid-2" style="margin-top: 16px;">
               <div class="form-group">
-                <label class="form-label">Retail Price (₹) *</label>
+                <label class="form-label">${t('admin_modal_add_price')}</label>
                 <input type="number" id="new-prod-price" class="form-input" placeholder="28000" required>
               </div>
               <div class="form-group">
-                <label class="form-label">Initial Stock *</label>
+                <label class="form-label">${t('admin_modal_add_stock')}</label>
                 <input type="number" id="new-prod-stock" class="form-input" placeholder="10" required>
               </div>
             </div>
 
             <div class="form-group" style="margin-top: 16px;">
-              <label class="form-label">Specs: Flow Rate</label>
+              <label class="form-label">${t('admin_modal_add_flow')}</label>
               <input type="text" id="new-prod-spec-flow" class="form-input" placeholder="e.g. 30 L/min">
             </div>
 
             <div class="form-group" style="margin-top: 16px;">
-              <label class="form-label">Specs: Working Pressure</label>
+              <label class="form-label">${t('admin_modal_add_press')}</label>
               <input type="text" id="new-prod-spec-press" class="form-input" placeholder="e.g. 15-45 kgf/cm²">
             </div>
 
             <div class="form-group" style="margin-top: 16px;">
-              <label class="form-label">Description *</label>
+              <label class="form-label">${t('admin_modal_add_desc')}</label>
               <textarea id="new-prod-desc" class="form-textarea" rows="4" placeholder="Enter full specifications and suitability..." required></textarea>
             </div>
 
             <div style="display: flex; gap: 16px; margin-top: 24px;">
-              <button type="submit" class="btn btn-primary">Create Product</button>
-              <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">Cancel</button>
+              <button type="submit" class="btn btn-primary">${t('admin_modal_add_btn_create')}</button>
+              <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">${t('admin_modal_add_btn_cancel')}</button>
             </div>
           </form>
         `);
@@ -411,7 +430,7 @@ export default async function renderAdmin(container, query) {
             const desc = document.getElementById('new-prod-desc').value;
 
             if (!name || isNaN(price) || isNaN(stock) || !desc) {
-              Components.showToast('Please complete all required fields.', 'error');
+              Components.showToast(t('admin_modal_add_toast_incomplete'), 'error');
               return;
             }
 
@@ -436,16 +455,15 @@ export default async function renderAdmin(container, query) {
             };
 
             State.saveProduct(newProduct);
-            Components.showToast(`Successfully added ${name} to store!`, 'success');
+            Components.showToast(t('admin_modal_add_toast_success').replace('{name}', name), 'success');
             Components.hideModal();
             drawProductsTab(viewport);
           });
         }
       });
     }
+    bindBackToDashboardEvent(viewport);
   };
-
-
 
   // 4. Customers List Tab
   const drawCustomersTab = (viewport) => {
@@ -453,11 +471,11 @@ export default async function renderAdmin(container, query) {
 
     viewport.innerHTML = `
       <div class="admin-view-header">
-        <h2 class="admin-view-title">Registered Customer Ledger</h2>
-        <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+        <h2 class="admin-view-title">${t('admin_cust_title')}</h2>
+        <button class="btn btn-secondary admin-back-dashboard-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-          Back to Store
-        </a>
+          ${t('btn_back')}
+        </button>
       </div>
 
       <div class="glass-card">
@@ -465,23 +483,23 @@ export default async function renderAdmin(container, query) {
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Username</th>
-                <th>Email Address</th>
-                <th>Registered Date</th>
-                <th>Account Role</th>
+                <th>${t('admin_cust_th_username')}</th>
+                <th>${t('admin_cust_th_email')}</th>
+                <th>${t('admin_cust_th_date')}</th>
+                <th>${t('admin_cust_th_role')}</th>
               </tr>
             </thead>
             <tbody>
               ${users.map(u => `
                 <tr>
-                  <td data-label="Username"><strong>${u.username}</strong></td>
-                  <td data-label="Email Address">${u.email}</td>
-                  <td data-label="Registered Date">${u.joinedDate || '2026-01-01'}</td>
-                  <td data-label="Account Role">
+                  <td data-label="${t('admin_cust_th_username')}"><strong>${u.username}</strong></td>
+                  <td data-label="${t('admin_cust_th_email')}">${u.email}</td>
+                  <td data-label="${t('admin_cust_th_date')}">${u.joinedDate || '2026-01-01'}</td>
+                  <td data-label="${t('admin_cust_th_role')}">
                     <span style="background: ${u.role === 'admin' ? 'rgba(212,175,55,0.15)' : 'rgba(0,0,0,0.05)'}; 
                                  color: ${u.role === 'admin' ? 'var(--color-accent)' : 'var(--color-text-muted)'};
                                  padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
-                      ${u.role}
+                      ${u.role === 'admin' ? t('admin_role') : u.role}
                     </span>
                   </td>
                 </tr>
@@ -491,6 +509,7 @@ export default async function renderAdmin(container, query) {
         </div>
       </div>
     `;
+    bindBackToDashboardEvent(viewport);
   };
 
   // 5. Marketing Events Tab
@@ -499,14 +518,14 @@ export default async function renderAdmin(container, query) {
 
     viewport.innerHTML = `
       <div class="admin-view-header">
-        <h2 class="admin-view-title">Marketing Events Manager</h2>
+        <h2 class="admin-view-title">${t('admin_ev_title')}</h2>
         <div class="admin-view-header-actions" style="display: flex; gap: 8px; align-items: center;">
-          <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+          <button class="btn btn-secondary admin-back-dashboard-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-            Back to Store
-          </a>
+            ${t('btn_back')}
+          </button>
           <button class="btn btn-primary" id="admin-add-event-btn">
-            ${Icons.plus} Schedule Event
+            ${Icons.plus} ${t('admin_ev_btn_schedule')}
           </button>
         </div>
       </div>
@@ -516,21 +535,21 @@ export default async function renderAdmin(container, query) {
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Event Title</th>
-                <th>Scheduled Date</th>
-                <th>Location / Outlet</th>
-                <th>Short Description</th>
-                <th>Actions</th>
+                <th>${t('admin_ev_th_title')}</th>
+                <th>${t('admin_ev_th_date')}</th>
+                <th>${t('admin_ev_th_loc')}</th>
+                <th>${t('admin_ev_th_desc')}</th>
+                <th>${t('admin_prod_th_actions')}</th>
               </tr>
             </thead>
             <tbody>
               ${events.map(ev => `
                 <tr>
-                  <td data-label="Event Title"><strong>${ev.title}</strong></td>
-                  <td data-label="Scheduled Date">${ev.date}</td>
-                  <td data-label="Location / Outlet">${ev.location}</td>
-                  <td data-label="Short Description" style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${ev.description}</td>
-                  <td data-label="Actions">
+                  <td data-label="${t('admin_ev_th_title')}"><strong>${ev.title}</strong></td>
+                  <td data-label="${t('admin_ev_th_date')}">${ev.date}</td>
+                  <td data-label="${t('admin_ev_th_loc')}">${ev.location}</td>
+                  <td data-label="${t('admin_ev_th_desc')}" style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${ev.description}</td>
+                  <td data-label="${t('admin_prod_th_actions')}">
                     <div class="admin-actions-cell">
                       <button class="btn-action btn-action-delete btn-delete-event" data-id="${ev.id}" title="Remove Event">
                         ${Icons.trash}
@@ -539,7 +558,7 @@ export default async function renderAdmin(container, query) {
                   </td>
                 </tr>
               `).join('')}
-              ${events.length === 0 ? `<tr><td colspan="5" style="text-align: center; color: var(--color-text-muted);">No marketing events scheduled.</td></tr>` : ''}
+              ${events.length === 0 ? `<tr><td colspan="5" style="text-align: center; color: var(--color-text-muted);">${t('admin_ev_empty')}</td></tr>` : ''}
             </tbody>
           </table>
         </div>
@@ -551,9 +570,9 @@ export default async function renderAdmin(container, query) {
       btn.addEventListener('click', (e) => {
         const id = e.currentTarget.dataset.id;
         const event = events.find(ev => ev.id === id);
-        if (event && confirm(`Are you sure you want to delete ${event.title}?`)) {
+        if (event && confirm(t('admin_ev_confirm_delete').replace('{title}', event.title))) {
           State.deleteEvent(id);
-          Components.showToast(`${event.title} has been deleted.`, 'info');
+          Components.showToast(t('admin_ev_toast_delete_success').replace('{title}', event.title), 'info');
           drawEventsTab(viewport);
         }
       });
@@ -564,30 +583,30 @@ export default async function renderAdmin(container, query) {
     if (addEventBtn) {
       addEventBtn.addEventListener('click', () => {
         Components.showModal(`
-          <h2 style="font-family: var(--font-headings); color: var(--color-primary); margin-bottom: 24px;">Schedule Marketing Event</h2>
+          <h2 style="font-family: var(--font-headings); color: var(--color-primary); margin-bottom: 24px;">${t('admin_modal_ev_title')}</h2>
           <form id="admin-create-event-form" class="auth-form">
             <div class="form-group">
-              <label class="form-label">Event Title *</label>
+              <label class="form-label">${t('admin_modal_ev_name')}</label>
               <input type="text" id="new-ev-title" class="form-input" placeholder="e.g. Agri-Showroom Live Demonstration" required>
             </div>
             <div class="form-grid-2" style="margin-top: 16px;">
               <div class="form-group">
-                <label class="form-label">Scheduled Date *</label>
+                <label class="form-label">${t('admin_modal_ev_date')}</label>
                 <input type="date" id="new-ev-date" class="form-input" required>
               </div>
               <div class="form-group">
-                <label class="form-label">Location / Hub *</label>
+                <label class="form-label">${t('admin_modal_ev_loc')}</label>
                 <input type="text" id="new-ev-loc" class="form-input" placeholder="e.g. Hub Center / Virtual" required>
               </div>
             </div>
             <div class="form-group" style="margin-top: 16px;">
-              <label class="form-label">Event Description *</label>
+              <label class="form-label">${t('admin_modal_ev_desc')}</label>
               <textarea id="new-ev-desc" class="form-textarea" rows="4" placeholder="Enter information about the exposition, training sessions, or product focus..." required></textarea>
             </div>
 
             <div style="display: flex; gap: 16px; margin-top: 24px;">
-              <button type="submit" class="btn btn-primary">Publish Event</button>
-              <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">Cancel</button>
+              <button type="submit" class="btn btn-primary">${t('admin_modal_ev_btn_publish')}</button>
+              <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">${t('admin_modal_add_btn_cancel')}</button>
             </div>
           </form>
         `);
@@ -603,7 +622,7 @@ export default async function renderAdmin(container, query) {
             const description = document.getElementById('new-ev-desc').value;
 
             if (!title || !date || !location || !description) {
-              Components.showToast('All fields are required.', 'error');
+              Components.showToast(t('admin_modal_ev_toast_incomplete'), 'error');
               return;
             }
 
@@ -617,13 +636,14 @@ export default async function renderAdmin(container, query) {
             };
 
             State.saveEvent(newEvent);
-            Components.showToast(`Published Event: ${title}.`, 'success');
+            Components.showToast(t('admin_modal_ev_toast_success').replace('{title}', title), 'success');
             Components.hideModal();
             drawEventsTab(viewport);
           });
         }
       });
     }
+    bindBackToDashboardEvent(viewport);
   };
 
   // 6. Customer Enquiries Tab
@@ -632,11 +652,11 @@ export default async function renderAdmin(container, query) {
 
     viewport.innerHTML = `
       <div class="admin-view-header">
-        <h2 class="admin-view-title">Customer Enquiries & Leads</h2>
-        <a href="#home" class="btn btn-secondary admin-mobile-back-btn">
+        <h2 class="admin-view-title">${t('admin_enq_title')}</h2>
+        <button class="btn btn-secondary admin-back-dashboard-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-          Back to Store
-        </a>
+          ${t('btn_back')}
+        </button>
       </div>
 
       <div class="glass-card">
@@ -644,34 +664,34 @@ export default async function renderAdmin(container, query) {
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Customer Name</th>
-                <th>Contact Info</th>
-                <th>Interest</th>
-                <th>Message Snippet</th>
-                <th>Date</th>
-                <th>Actions</th>
+                <th>${t('admin_enq_th_name')}</th>
+                <th>${t('admin_enq_th_contact')}</th>
+                <th>${t('admin_enq_th_interest')}</th>
+                <th>${t('admin_enq_th_msg')}</th>
+                <th>${t('admin_enq_th_date')}</th>
+                <th>${t('admin_prod_th_actions')}</th>
               </tr>
             </thead>
             <tbody>
               ${enquiries.map(e => `
                 <tr data-id="${e.id}">
-                  <td data-label="Customer Name"><strong>${e.name}</strong></td>
-                  <td data-label="Contact Info">
+                  <td data-label="${t('admin_enq_th_name')}"><strong>${e.name}</strong></td>
+                  <td data-label="${t('admin_enq_th_contact')}">
                     <div style="font-size: 0.85rem; color: var(--color-text);">
                       <div>${e.email}</div>
                       <div style="color: var(--color-text-muted);">${e.phone}</div>
                     </div>
                   </td>
-                  <td data-label="Interest">
+                  <td data-label="${t('admin_enq_th_interest')}">
                     <span style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">
-                      ${e.interest}
+                      ${t(e.interest) || e.interest}
                     </span>
                   </td>
-                  <td data-label="Message Snippet" style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                  <td data-label="${t('admin_enq_th_msg')}" style="max-width: 250px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
                     ${e.message}
                   </td>
-                  <td data-label="Date">${e.date}</td>
-                  <td data-label="Actions">
+                  <td data-label="${t('admin_enq_th_date')}">${e.date}</td>
+                  <td data-label="${t('admin_prod_th_actions')}">
                     <div class="admin-actions-cell">
                       <button class="btn-action btn-view-enquiry" data-id="${e.id}" title="View Full Message" style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary);">
                         ${Icons.info}
@@ -683,7 +703,7 @@ export default async function renderAdmin(container, query) {
                   </td>
                 </tr>
               `).join('')}
-              ${enquiries.length === 0 ? `<tr><td colspan="6" style="text-align: center; color: var(--color-text-muted);">No enquiries found.</td></tr>` : ''}
+              ${enquiries.length === 0 ? `<tr><td colspan="6" style="text-align: center; color: var(--color-text-muted);">${t('admin_enq_empty')}</td></tr>` : ''}
             </tbody>
           </table>
         </div>
@@ -697,35 +717,35 @@ export default async function renderAdmin(container, query) {
         const enquiry = enquiries.find(e => e.id === id);
         if (enquiry) {
           Components.showModal(`
-            <h2 style="font-family: var(--font-headings); color: var(--color-primary); margin-bottom: 16px;">Enquiry Details</h2>
+            <h2 style="font-family: var(--font-headings); color: var(--color-primary); margin-bottom: 16px;">${t('admin_modal_enq_title')}</h2>
             <div style="display: flex; flex-direction: column; gap: 16px; font-size: 0.95rem; line-height: 1.5; color: var(--color-text);">
               <div>
-                <strong>From:</strong> ${enquiry.name}
+                <strong>${t('admin_modal_enq_from')}</strong> ${enquiry.name}
               </div>
               <div class="enquiry-details-meta-grid">
                 <div>
-                  <strong>Email:</strong> <a href="mailto:${enquiry.email}" style="color: var(--color-accent); text-decoration: underline;">${enquiry.email}</a>
+                  <strong>${t('admin_modal_enq_email')}</strong> <a href="mailto:${enquiry.email}" style="color: var(--color-accent); text-decoration: underline;">${enquiry.email}</a>
                 </div>
                 <div>
-                  <strong>Phone:</strong> ${enquiry.phone}
+                  <strong>${t('admin_modal_enq_phone')}</strong> ${enquiry.phone}
                 </div>
               </div>
               <div>
-                <strong>Interest:</strong> <span style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 700;">${enquiry.interest}</span>
+                <strong>${t('admin_modal_enq_interest')}</strong> <span style="background: rgba(25, 103, 62, 0.05); color: var(--color-primary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 700;">${t(enquiry.interest) || enquiry.interest}</span>
               </div>
               <div>
-                <strong>Received Date:</strong> ${enquiry.date}
+                <strong>${t('admin_modal_enq_date')}</strong> ${enquiry.date}
               </div>
               <hr style="border: 0; border-top: 1px solid rgba(0,0,0,0.08); margin: 8px 0;">
               <div>
-                <strong>Message:</strong>
+                <strong>${t('admin_modal_enq_msg')}</strong>
                 <p style="background: var(--color-bg); padding: 16px; border-radius: 8px; border: var(--glass-border); margin-top: 8px; white-space: pre-wrap; word-break: break-word;">${enquiry.message}</p>
               </div>
               <div class="enquiry-details-actions">
-                <a href="mailto:${enquiry.email}?subject=Re: Make Corner Enquiry regarding ${encodeURIComponent(enquiry.interest)}" class="btn btn-primary">
-                  ${Icons.mail} Reply by Email
+                <a href="mailto:${enquiry.email}?subject=Re: Mech Corner Enquiry regarding ${encodeURIComponent(t(enquiry.interest) || enquiry.interest)}" class="btn btn-primary">
+                  ${Icons.mail} ${t('admin_modal_enq_btn_reply')}
                 </a>
-                <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="Components.hideModal()">${t('btn_close')}</button>
               </div>
             </div>
           `);
@@ -738,13 +758,14 @@ export default async function renderAdmin(container, query) {
       btn.addEventListener('click', (ev) => {
         const id = ev.currentTarget.dataset.id;
         const enquiry = enquiries.find(e => e.id === id);
-        if (enquiry && confirm(`Are you sure you want to remove the enquiry from ${enquiry.name}?`)) {
+        if (enquiry && confirm(t('admin_enq_confirm_delete').replace('{name}', enquiry.name))) {
           State.deleteEnquiry(id);
-          Components.showToast(`Enquiry from ${enquiry.name} deleted.`, 'info');
+          Components.showToast(t('admin_enq_toast_delete_success').replace('{name}', enquiry.name), 'info');
           drawEnquiriesTab(viewport);
         }
       });
     });
+    bindBackToDashboardEvent(viewport);
   };
 
   // Bind sidebar button tab clicks
@@ -781,12 +802,30 @@ export default async function renderAdmin(container, query) {
       });
     });
 
+    // Language switcher handler in sidebar
+    const adminLangSelect = document.getElementById('admin-lang-select');
+    if (adminLangSelect) {
+      adminLangSelect.addEventListener('change', (e) => {
+        const newLang = e.target.value;
+        State.setLanguage(newLang);
+        
+        // Update global language select dropdown in outer app view (header)
+        const globalLangSelect = document.getElementById('lang-select');
+        if (globalLangSelect) {
+          globalLangSelect.value = newLang;
+        }
+        
+        // Re-render admin dashboard immediately
+        drawAdminStructure();
+      });
+    }
+
     const logoutBtn = document.getElementById('admin-sidebar-logout-btn');
     if (logoutBtn) {
       logoutBtn.addEventListener('click', () => {
         toggleMenu(false);
         State.logoutUser();
-        Components.showToast('Signed out of admin portal.', 'info');
+        Components.showToast(t('admin_toast_signout'), 'info');
         window.location.hash = '#home';
       });
     }

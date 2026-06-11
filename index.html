@@ -5,10 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Make Corner (Mech Corner) specializes in premium agricultural spraying solutions. Discover our advanced power sprayers, knapsack sprayers, and battery spray pumps designed for precision, high efficiency, and maximum crop protection.">
+    content="Mech Corner specializes in premium agricultural spraying solutions. Discover our advanced power sprayers, knapsack sprayers, and battery spray pumps designed for precision, high efficiency, and maximum crop protection.">
   <meta name="keywords"
-    content="agricultural sprayers, power sprayers, knapsack sprayers, battery spray pumps, Lu Shyoung, LS-30, agricultural equipment, precision farming, Make Corner, Mech Corner">
-  <title>Make Corner | Premium Agricultural Spraying Solutions</title>
+    content="agricultural sprayers, power sprayers, knapsack sprayers, battery spray pumps, Lu Shyoung, LS-30, agricultural equipment, precision farming, Mech Corner">
+  <title>Mech Corner | Premium Agricultural Spraying Solutions</title>
 
   <!-- Preconnect to Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,7 @@
   <div id="loading-screen" class="loading-screen">
     <div class="spinner-container">
       <div class="spinner"></div>
-      <div class="spinner-logo">Make Corner</div>
+      <div class="spinner-logo">Mech Corner</div>
     </div>
   </div>
 
@@ -41,7 +41,7 @@
           <path d="M12 8L18 20H6L12 8Z" fill="currentColor" />
           <circle cx="12" cy="14" r="2" fill="var(--color-bg)" />
         </svg>
-        <span class="logo-text">Make <span class="logo-accent">Corner</span></span>
+        <span class="logo-text">Mech <span class="logo-accent">Corner</span></span>
       </a>
 
       <!-- Desktop Navigation -->
@@ -51,7 +51,7 @@
         <div class="nav-dropdown">
           <a href="#shop" class="nav-link nav-dropdown-trigger" id="nav-link-shop" aria-expanded="false">Products</a>
           <div class="nav-dropdown-menu">
-            <a href="#shop">All Products</a>
+            <a href="#shop" id="nav-link-all-products">All Products</a>
             <a href="#shop?category=Power%20Sprayers">Power Sprayers</a>
             <a href="#shop?category=Knapsack%20Sprayers">Knapsack Sprayers</a>
             <a href="#shop?category=Battery%20Spray%20Pumps">Battery Spray Pumps</a>
@@ -67,6 +67,15 @@
 
       <!-- Header Actions -->
       <div class="header-actions">
+        <!-- Language Switcher -->
+        <div class="lang-switcher-wrapper">
+          <select id="lang-select" class="lang-select-dropdown" aria-label="Select Language">
+            <option value="en">EN</option>
+            <option value="mr">मराठी</option>
+            <option value="hi">हिंदी</option>
+          </select>
+        </div>
+
         <!-- Mobile Menu Trigger -->
         <button id="mobile-menu-btn" class="header-action-btn mobile-menu-btn" aria-label="Toggle Navigation Menu">
           <div class="bar"></div>
@@ -93,9 +102,9 @@
             <path d="M12 8L18 20H6L12 8Z" fill="currentColor" />
             <circle cx="12" cy="14" r="2" fill="var(--color-bg)" />
           </svg>
-          <span class="logo-text">Make <span class="logo-accent">Corner</span></span>
+          <span class="logo-text">Mech <span class="logo-accent">Corner</span></span>
         </a>
-        <p class="footer-desc">Premium agricultural spraying machinery and equipment. Designed for farmers who demand
+        <p class="footer-desc" id="footer-desc">Premium agricultural spraying machinery and equipment. Designed for farmers who demand
           efficiency, performance, and durability in crop protection.</p>
         <div class="footer-socials">
           <a href="#" class="social-icon-btn" aria-label="Facebook">
@@ -130,28 +139,28 @@
           </a>
         </div>
       </div>
-
+ 
       <div class="footer-links-grid">
         <div class="footer-link-group">
-          <h4 class="footer-group-title">Sitemap</h4>
+          <h4 class="footer-group-title" id="footer-title-sitemap">Sitemap</h4>
           <ul class="footer-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#shop">Products</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#home" id="footer-link-home">Home</a></li>
+            <li><a href="#shop" id="footer-link-shop">Products</a></li>
+            <li><a href="#about" id="footer-link-about">About Us</a></li>
+            <li><a href="#contact" id="footer-link-contact">Contact</a></li>
           </ul>
         </div>
         <div class="footer-link-group">
-          <h4 class="footer-group-title">Products</h4>
+          <h4 class="footer-group-title" id="footer-title-products">Products</h4>
           <ul class="footer-links">
-            <li><a href="#shop?category=Power%20Sprayers">Power Sprayers</a></li>
-            <li><a href="#shop?category=Knapsack%20Sprayers">Knapsack Sprayers</a></li>
-            <li><a href="#shop?category=Battery%20Spray%20Pumps">Battery Spray Pumps</a></li>
+            <li><a href="#shop?category=Power%20Sprayers" id="footer-link-cat1">Power Sprayers</a></li>
+            <li><a href="#shop?category=Knapsack%20Sprayers" id="footer-link-cat2">Knapsack Sprayers</a></li>
+            <li><a href="#shop?category=Battery%20Spray%20Pumps" id="footer-link-cat3">Battery Spray Pumps</a></li>
           </ul>
         </div>
         <div class="footer-link-group">
-          <h4 class="footer-group-title">Newsletter</h4>
-          <p class="footer-newsletter-text">Subscribe to receive agricultural machinery updates, maintenance guides, and
+          <h4 class="footer-group-title" id="footer-title-newsletter">Newsletter</h4>
+          <p class="footer-newsletter-text" id="footer-newsletter-text">Subscribe to receive agricultural machinery updates, maintenance guides, and
             discount deals.</p>
           <form class="footer-newsletter-form" id="newsletter-form">
             <input type="email" placeholder="Your Email Address" required aria-label="Email address for newsletter"
@@ -169,11 +178,11 @@
     </div>
     <div class="footer-bottom">
       <div class="footer-bottom-container">
-        <p class="copyright">&copy; 2026 Make Corner. All rights reserved. Built with precision for sustainable
+        <p class="copyright" id="footer-copyright">&copy; 2026 Mech Corner. All rights reserved. Built with precision for sustainable
           agriculture.</p>
         <div class="footer-bottom-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
+          <a href="#" id="footer-link-privacy">Privacy Policy</a>
+          <a href="#" id="footer-link-terms">Terms of Service</a>
         </div>
       </div>
     </div>

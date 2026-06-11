@@ -3,33 +3,34 @@
    ========================================================================== */
 
 import { Components } from '../components.js';
+import { t } from '../i18n.js';
 
 export default async function renderAbout(container, query) {
   container.innerHTML = `
     <!-- About Story Section -->
-    <section class="section-padding">
+    <section class="section-padding" style="padding-bottom: 40px;">
       <div class="container about-hero-grid">
         <div class="about-story">
-          <span class="section-subtitle">Our Heritage</span>
-          <h1 class="section-title" style="margin-bottom: 20px;">Specialized in Crop Protection Since 2011</h1>
+          <span class="section-subtitle">${t('about_subtitle')}</span>
+          <h1 class="section-title" style="margin-bottom: 20px;">${t('about_title')}</h1>
           <p>
-            Make Corner (originally established as Mech Corner) was founded with a single mission: to provide farmers with durable, highly-efficient agricultural spraying equipment that withstands the test of time. Over the last decade, we have established ourselves as the premier distributor of Lu Shyoung pressure pumps and spray accessories.
+            ${t('about_desc1')}
           </p>
           <p>
-            Whether it's custom power sprayer rigs with multiple outlets, comfortable motorized backpack knapsacks, or rechargeable eco-friendly battery sprayers, our solutions are engineered to minimize pesticide and herbicide waste while maximizing crop surface area penetration.
+            ${t('about_desc2')}
           </p>
           <p>
-            We operate out of our state-of-the-art training and repair facilities, offering local growers hands-on workshops, repair calibrations, and immediate access to original spares to ensure zero downtime during critical spraying seasons.
+            ${t('about_desc3')}
           </p>
         </div>
         <div class="hero-image-wrapper">
-          <div class="hero-image-container" style="height: 380px;">
+          <div class="hero-image-container">
             <div class="hero-image-fallback">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
-              <h3>Make Corner Care & Spares</h3>
-              <p>Certified Technicians & Maintenance</p>
+              <h3>${t('about_image_title')}</h3>
+              <p>${t('about_image_desc')}</p>
             </div>
           </div>
         </div>
@@ -37,24 +38,24 @@ export default async function renderAbout(container, query) {
     </section>
 
     <!-- Core Values Accordion Section -->
-    <section class="section-padding" style="background: var(--color-surface); border-top: var(--glass-border); border-bottom: var(--glass-border);">
+    <section class="section-padding" style="padding-top: 40px; padding-bottom: 40px; background: var(--color-surface); border-top: var(--glass-border); border-bottom: var(--glass-border);">
       <div class="container" style="max-width: 800px;">
         <div class="section-title-wrapper">
-          <span class="section-subtitle">What Guides Us</span>
-          <h2 class="section-title">Our Guiding Principles</h2>
-          <p class="section-desc">We base our daily business and custom assemblies on these core commitments to our grower community.</p>
+          <span class="section-subtitle">${t('about_principles_subtitle')}</span>
+          <h2 class="section-title">${t('about_principles_title')}</h2>
+          <p class="section-desc">${t('about_principles_desc')}</p>
         </div>
 
         <div class="about-values-accordion">
           <!-- Accordion Item 1 -->
           <div class="accordion-item active">
             <div class="accordion-header">
-              <h3 class="accordion-title">1. Engineered Precision & Quality</h3>
+              <h3 class="accordion-title">${t('about_p1_title')}</h3>
               <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
             <div class="accordion-body">
               <p style="padding-top: 8px;">
-                We refuse to deal in substandard materials. Every plunger pump, nozzle body, and delivery hose we sell is tested in-house. We maintain a full inventory of original Lu Shyoung stainless steel plungers, valve kits, and leather gaskets to guarantee your equipment works season after season.
+                ${t('about_p1_desc')}
               </p>
             </div>
           </div>
@@ -62,12 +63,12 @@ export default async function renderAbout(container, query) {
           <!-- Accordion Item 2 -->
           <div class="accordion-item">
             <div class="accordion-header">
-              <h3 class="accordion-title">2. Environmental Sustainability</h3>
+              <h3 class="accordion-title">${t('about_p2_title')}</h3>
               <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
             <div class="accordion-body">
               <p style="padding-top: 8px;">
-                Over-spraying degrades soils and wastes valuable chemicals. By focusing on adjustable nozzles and flow control valves, we assist farmers in calibrating sprayer pressure to deliver optimal droplet size (microns), reducing chemical runoffs and drift.
+                ${t('about_p2_desc')}
               </p>
             </div>
           </div>
@@ -75,12 +76,12 @@ export default async function renderAbout(container, query) {
           <!-- Accordion Item 3 -->
           <div class="accordion-item">
             <div class="accordion-header">
-              <h3 class="accordion-title">3. Absolute Farmer Support</h3>
+              <h3 class="accordion-title">${t('about_p3_title')}</h3>
               <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
             <div class="accordion-body">
               <p style="padding-top: 8px;">
-                Farming doesn't wait for office hours. We offer active technical support guides, free maintenance inspections, and step-by-step videos on packing washer replacements to keep you spraying without interruption.
+                ${t('about_p3_desc')}
               </p>
             </div>
           </div>
@@ -89,12 +90,12 @@ export default async function renderAbout(container, query) {
     </section>
 
     <!-- Team Members Section -->
-    <section class="section-padding">
+    <section class="section-padding" style="padding-top: 40px;">
       <div class="container">
         <div class="section-title-wrapper">
-          <span class="section-subtitle">The Experts</span>
-          <h2 class="section-title">Meet Our Spraying Specialists</h2>
-          <p class="section-desc">Our dedicated team has decades of combined experience in agricultural machinery, fluid dynamics, and customer support.</p>
+          <span class="section-subtitle">${t('about_team_subtitle')}</span>
+          <h2 class="section-title">${t('about_team_title')}</h2>
+          <p class="section-desc">${t('about_team_desc')}</p>
         </div>
 
         <div class="team-grid">
@@ -102,24 +103,24 @@ export default async function renderAbout(container, query) {
           <div class="team-card glass-card">
             <div class="team-avatar">JC</div>
             <h3 class="team-name">Jacob Chen</h3>
-            <span class="team-role">Founder & Chief Engineer</span>
-            <p class="team-bio">With over 20 years in mechanical pump systems, Jacob custom-builds all tractor and engine-driven sprayer systems for local clients.</p>
+            <span class="team-role">${t('about_m1_role')}</span>
+            <p class="team-bio">${t('about_m1_bio')}</p>
           </div>
 
           <!-- Member 2 -->
           <div class="team-card glass-card">
             <div class="team-avatar">MS</div>
             <h3 class="team-name">Marcus Sterling</h3>
-            <span class="team-role">Head of Technical Support</span>
-            <p class="team-bio">Marcus oversees parts testing and organizes our seasonal maintenance workshops. If you have plunger leaks, Marcus knows the fix.</p>
+            <span class="team-role">${t('about_m2_role')}</span>
+            <p class="team-bio">${t('about_m2_bio')}</p>
           </div>
 
           <!-- Member 3 -->
           <div class="team-card glass-card">
             <div class="team-avatar">AL</div>
             <h3 class="team-name">Anna Lopez</h3>
-            <span class="team-role">Customer Care & Logistics</span>
-            <p class="team-bio">Anna coordinates fast orders dispatch and catalog deliveries, making sure farms receive knapsack sprayers and replacement parts overnight.</p>
+            <span class="team-role">${t('about_m3_role')}</span>
+            <p class="team-bio">${t('about_m3_bio')}</p>
           </div>
         </div>
       </div>
